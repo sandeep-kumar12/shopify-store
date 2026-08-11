@@ -5,7 +5,6 @@
 <div
   class="myshake-feature color-{{ section.settings.color_scheme }}"
   id="myshake-feature-{{ section.id }}"
-  data-slide-duration="{{ section.settings.slide_duration }}"
 >
   <div class="myshake-feature__inner page-width">
     <div class="myshake-feature__grid">
@@ -356,7 +355,7 @@
     display: block;
   }
 
-  /* Progress: fills only while current slide is active (segmented) */
+  /* Progress: static per active slide — no autoplay */
   #shopify-section-{{ section.id }} .myshake-feature__progress {
     margin-top: clamp(20px, 3vw, 32px);
     display: flex;
@@ -381,14 +380,30 @@
     width: 0%;
     border-radius: 2px;
     background: var(--mf-fill);
-    will-change: width;
+    transition: width 0.25s ease;
+  }
+
+  /* Below desktop: page-width left/right padding */
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ section.id }} .myshake-feature__inner {
+      padding-left: max(20px, {{ section.settings.padding_left }}px);
+      padding-right: max(20px, {{ section.settings.padding_right }}px);
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__text {
+      max-width: 340px;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__media {
+      max-width: 420px;
+    }
   }
 
   /* Mobile: image top, content bottom, full width */
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} .myshake-feature__inner {
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     #shopify-section-{{ section.id }} .myshake-feature__slide.is-active {
@@ -418,16 +433,6 @@
       justify-content: center;
     }
   }
-
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    #shopify-section-{{ section.id }} .myshake-feature__text {
-      max-width: 340px;
-    }
-
-    #shopify-section-{{ section.id }} .myshake-feature__media {
-      max-width: 420px;
-    }
-  }
 </style>
 
 {%- if slide_blocks.size > 1 -%}
@@ -439,59 +444,42 @@
     var slides = Array.prototype.slice.call(root.querySelectorAll('.myshake-feature__slide'));
     var track = root.querySelector('.myshake-feature__progress-track');
     var fill = track ? track.querySelector('.myshake-feature__progress-fill') : null;
-    var duration = parseInt(root.dataset.slideDuration, 10) || 5000;
     var total = slides.length;
     if (total < 2 || !fill) return;
 
     var current = 0;
-    var timer = null;
 
-    function segmentStart(i) { return (i / total) * 100; }
-    function segmentEnd(i) { return ((i + 1) / total) * 100; }
-
-    function setFillInstant(pct) {
-      fill.style.transition = 'none';
+    function updateFill() {
+      var pct = ((current + 1) / total) * 100;
       fill.style.width = pct + '%';
-      void fill.offsetWidth;
+      if (track) track.setAttribute('aria-valuenow', String(Math.round(pct)));
     }
 
-    function animateFill(from, to) {
-      setFillInstant(from);
-      fill.style.transition = 'width linear ' + duration + 'ms';
-      fill.style.width = to + '%';
-      if (track) track.setAttribute('aria-valuenow', String(Math.round(to)));
-    }
-
-    function runSlide(index) {
+    function goTo(index) {
       slides[current].classList.remove('is-active');
       current = ((index % total) + total) % total;
       slides[current].classList.add('is-active');
-
-      var from = segmentStart(current);
-      var to = segmentEnd(current);
-      if (current === 0) setFillInstant(0);
-      animateFill(from, to);
-
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        runSlide(current + 1);
-      }, duration);
+      updateFill();
     }
 
+    // Manual only: mouse click on progress bar → next slide (no autoplay)
     if (track) {
-      track.addEventListener('click', function () {
-        clearTimeout(timer);
-        runSlide(current + 1);
+      track.addEventListener('click', function (e) {
+        var rect = track.getBoundingClientRect();
+        var ratio = (e.clientX - rect.left) / rect.width;
+        var index = Math.min(total - 1, Math.max(0, Math.floor(ratio * total)));
+        if (index === current) {
+          goTo(current + 1);
+        } else {
+          goTo(index);
+        }
       });
     }
 
-    requestAnimationFrame(function () {
-      runSlide(0);
-    });
+    updateFill();
   })();
 </script>
 {%- endif -%}
-
 {% schema %}
 {
   "name": "MyShake Product Feature",
@@ -541,20 +529,6 @@
       "step": 2,
       "unit": "px",
       "default": 40
-    },
-    {
-      "type": "header",
-      "content": "Slider"
-    },
-    {
-      "type": "range",
-      "id": "slide_duration",
-      "label": "Slide duration",
-      "min": 2000,
-      "max": 9500,
-      "step": 500,
-      "unit": "ms",
-      "default": 5000
     },
     {
       "type": "header",
