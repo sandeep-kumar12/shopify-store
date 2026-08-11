@@ -120,13 +120,22 @@
     --nh-green: {{ section.settings.color_green }};
     --nh-teal: {{ section.settings.color_teal }};
 
+    /* ===== Positions — yahan se left/top/right/bottom set karo (mobile + desktop same) ===== */
+    --nh-top-left: 8%;
+    --nh-top-top: 14%;
+    --nh-top-width: 48%;
+
+    --nh-bottom-right: 8%;
+    --nh-bottom-bottom: 10%;
+    --nh-bottom-width: 34%;
+
     position: relative;
     width: 100%;
     overflow: hidden;
     background: #0a0a0a;
     margin-top: {{ section.settings.spacing_top }}px;
     margin-bottom: {{ section.settings.spacing_bottom }}px;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1440 / 698;
   }
 
   #shopify-section-{{ section.id }} .nutri-hero__media {
@@ -144,41 +153,53 @@
     display: block;
   }
 
+  /* Stage fills the image — no padding layout */
   #shopify-section-{{ section.id }} .nutri-hero__content {
-    position: relative;
+    position: absolute;
+    inset: 0;
     z-index: 1;
-    height: 100%;
-    width: 100%;
+  }
+
+  /* Left text — absolute % position (same ratio every device) */
+  #shopify-section-{{ section.id }} .nutri-hero__top {
+    position: absolute;
+    left: var(--nh-top-left);
+    top: var(--nh-top-top);
+    width: var(--nh-top-width);
+    max-width: 100%;
+    text-align: left;
+  }
+
+  /* Right CTA — absolute % position */
+  #shopify-section-{{ section.id }} .nutri-hero__bottom {
+    position: absolute;
+    right: var(--nh-bottom-right);
+    bottom: var(--nh-bottom-bottom);
+    width: var(--nh-bottom-width);
+    max-width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: clamp(12px, 3vw, 28px);
-    padding: clamp(20px, 5vw, 36px) clamp(16px, 5vw, 28px) clamp(16px, 4vw, 28px);
+    align-items: flex-end;
+    text-align: right;
   }
 
-  #shopify-section-{{ section.id }} .nutri-hero__top {
-    max-width: min(100%, 34rem);
-    width: 100%;
-  }
-
-  /* ===== Typography — clamp se har device pe scale, image ke bahar nahi jayega ===== */
+  /* ===== Typography (clamp) ===== */
   #shopify-section-{{ section.id }} .nutri-hero__subtitle {
-    margin: 0 0 0.3em;
+    margin: 0 0 0.25em;
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
-    font-size: clamp(12px, 3.4vw, 16px);
+    font-size: clamp(10px, 1.7vw, 26px);
     line-height: 1.4;
     letter-spacing: 0;
     color: var(--nh-white);
-    max-width: 28em;
   }
 
   #shopify-section-{{ section.id }} .nutri-hero__heading {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    font-size: clamp(28px, 9.5vw, 42px);
-    line-height: 1.02;
+    font-size: clamp(22px, 5.8vw, 92px);
+    line-height: 1;
     letter-spacing: 0;
   }
 
@@ -203,8 +224,8 @@
 
   #shopify-section-{{ section.id }} .nutri-hero__play {
     flex: 0 0 auto;
-    width: clamp(16px, 0.3em, 28px);
-    height: clamp(16px, 0.3em, 28px);
+    width: clamp(14px, 1.7vw, 28px);
+    height: clamp(14px, 1.7vw, 28px);
     padding: 0;
     margin: 0;
     border: 0;
@@ -228,42 +249,35 @@
     display: inline-block;
     width: max-content;
     max-width: 100%;
-    margin-top: clamp(10px, 2.5vw, 16px);
-    padding: clamp(8px, 2vw, 12px) clamp(14px, 3.5vw, 22px);
+    margin-top: clamp(8px, 1.5vw, 22px);
+    padding: clamp(6px, 0.7vw, 12px) clamp(10px, 1.5vw, 24px);
     border-radius: 4px;
     background: var(--nh-teal);
     color: var(--nh-green);
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    font-size: clamp(11px, 2.8vw, 13px);
+    font-size: clamp(9px, 0.95vw, 15px);
     line-height: 1.3;
     letter-spacing: 0;
     white-space: nowrap;
   }
 
-  #shopify-section-{{ section.id }} .nutri-hero__bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    flex-shrink: 0;
-  }
-
   #shopify-section-{{ section.id }} .nutri-hero__tagline {
-    margin: 0 0 0.65em;
+    margin: 0 0 clamp(6px, 0.8vw, 12px);
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    font-size: clamp(12px, 3vw, 14px);
+    font-size: clamp(10px, 1.15vw, 18px);
     line-height: 1.3;
     letter-spacing: 0;
     color: var(--nh-white);
+    text-align: right;
   }
 
   #shopify-section-{{ section.id }} .nutri-hero__cta {
     display: inline-flex;
     align-items: center;
-    min-height: clamp(38px, 10vw, 44px);
-    padding: 0.3em 0.35em 0.3em 1em;
+    min-height: clamp(28px, 2.8vw, 48px);
+    padding: 0.25em 0.3em 0.25em 0.9em;
     border-radius: 999px;
     background: var(--nh-teal);
     color: var(--nh-white);
@@ -274,12 +288,12 @@
   #shopify-section-{{ section.id }} .nutri-hero__price {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    font-size: clamp(12px, 3vw, 14px);
+    font-size: clamp(10px, 1vw, 16px);
     line-height: 1;
     letter-spacing: 0;
     color: var(--nh-green);
     white-space: nowrap;
-    padding-right: 0.75em;
+    padding-right: 0.7em;
   }
 
   #shopify-section-{{ section.id }} .nutri-hero__buy {
@@ -287,11 +301,11 @@
     display: inline-flex;
     align-items: center;
     height: 100%;
-    padding: 0.5em 2em 0.5em 0.8em;
+    padding: 0.45em 1.85em 0.45em 0.7em;
     border-left: 1px solid rgba(255, 255, 255, 0.35);
     font-family: 'Space Grotesk', 'Poppins', sans-serif;
     font-weight: 500;
-    font-size: clamp(11px, 2.8vw, 13px);
+    font-size: clamp(9px, 0.95vw, 15px);
     line-height: 1;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -301,11 +315,11 @@
 
   #shopify-section-{{ section.id }} .nutri-hero__buy-icon {
     position: absolute;
-    right: -0.1em;
+    right: -0.08em;
     top: 50%;
     transform: translateY(-50%);
-    width: clamp(24px, 6.5vw, 28px);
-    height: clamp(24px, 6.5vw, 28px);
+    width: clamp(18px, 1.85vw, 30px);
+    height: clamp(18px, 1.85vw, 30px);
     border-radius: 50%;
     background: var(--nh-green);
     color: var(--nh-teal);
@@ -324,144 +338,61 @@
 
   #shopify-section-{{ section.id }} .nutri-hero__buy-icon svg {
     display: block;
-    width: 14px;
-    height: 14px;
+    width: 55%;
+    height: 55%;
   }
 
-  /* Tablet */
-  @media screen and (min-width: 750px) {
+  /*
+    Mobile: SAME design / SAME % positions.
+    Aspect ratio changes to fit phone, but blocks stay locked on the image.
+  */
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nutri-hero {
+      aspect-ratio: 4 / 5;
+
+      --nh-top-left: 6%;
+      --nh-top-top: 10%;
+      --nh-top-width: 78%;
+
+      --nh-bottom-right: 5%;
+      --nh-bottom-bottom: 7%;
+      --nh-bottom-width: 72%;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__subtitle {
+      font-size: clamp(11px, 3.2vw, 14px);
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__heading {
+      font-size: clamp(26px, 8.5vw, 38px);
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__badge {
+      font-size: clamp(10px, 2.8vw, 12px);
+      white-space: normal;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__tagline {
+      font-size: clamp(11px, 3vw, 13px);
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__price,
+    #shopify-section-{{ section.id }} .nutri-hero__buy {
+      font-size: clamp(11px, 3vw, 13px);
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
     #shopify-section-{{ section.id }} .nutri-hero {
       aspect-ratio: 3 / 2;
-    }
 
-    #shopify-section-{{ section.id }} .nutri-hero__content {
-      padding: clamp(28px, 5vw, 48px) clamp(24px, 6vw, 56px) clamp(24px, 4vw, 40px);
-    }
+      --nh-top-left: 7%;
+      --nh-top-top: 12%;
+      --nh-top-width: 55%;
 
-    #shopify-section-{{ section.id }} .nutri-hero__subtitle {
-      font-size: clamp(14px, 2.2vw, 20px);
-      line-height: 1.4;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__heading {
-      font-size: clamp(40px, 6.5vw, 64px);
-      line-height: 1;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__badge {
-      font-size: clamp(12px, 1.4vw, 14px);
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__tagline {
-      font-size: clamp(13px, 1.6vw, 16px);
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__price,
-    #shopify-section-{{ section.id }} .nutri-hero__buy {
-      font-size: clamp(12px, 1.4vw, 15px);
-    }
-  }
-
-  /* Desktop — design lock: vw scale with image aspect, text stays inside */
-  @media screen and (min-width: 990px) {
-    #shopify-section-{{ section.id }} .nutri-hero {
-      aspect-ratio: 1440 / 698;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__content {
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding: 6.5vw 9vw 5.5vw;
-      gap: 2vw;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__top {
-      align-self: flex-start;
-      max-width: 48%;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__subtitle {
-      font-size: clamp(16px, 1.8vw, 26px);
-      line-height: 1.45;
-      max-width: 22em;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__heading {
-      font-size: clamp(48px, 5.8vw, 92px);
-      line-height: 1;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__play {
-      width: clamp(20px, 1.8vw, 28px);
-      height: clamp(20px, 1.8vw, 28px);
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__badge {
-      margin-top: 1.6vw;
-      padding: 0.65vw 1.5vw;
-      min-width: 14em;
-      font-size: clamp(12px, 0.95vw, 15px);
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__bottom {
-      align-items: flex-end;
-      text-align: right;
-      width: auto;
-      max-width: 20rem;
-      align-self: flex-end;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__tagline {
-      text-align: right;
-      font-size: clamp(13px, 1.15vw, 18px);
-      line-height: 1.3;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__cta {
-      min-height: clamp(40px, 2.8vw, 48px);
-      padding: 0.3em 0.4em 0.3em 1.1em;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__price {
-      font-size: clamp(13px, 1vw, 16px);
-      padding-right: 0.9em;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__buy {
-      font-size: clamp(12px, 0.95vw, 15px);
-      padding: 0.55em 2.1em 0.55em 0.9em;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__buy-icon {
-      width: clamp(26px, 1.85vw, 30px);
-      height: clamp(26px, 1.85vw, 30px);
-    }
-  }
-
-  /* Large screens — cap so text doesn't explode */
-  @media screen and (min-width: 1600px) {
-    #shopify-section-{{ section.id }} .nutri-hero__subtitle {
-      font-size: 26px;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__heading {
-      font-size: 92px;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__badge {
-      font-size: 15px;
-      padding: 12px 24px;
-      margin-top: 22px;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__tagline {
-      font-size: 18px;
-    }
-
-    #shopify-section-{{ section.id }} .nutri-hero__price,
-    #shopify-section-{{ section.id }} .nutri-hero__buy {
-      font-size: 15px;
+      --nh-bottom-right: 6%;
+      --nh-bottom-bottom: 8%;
+      --nh-bottom-width: 40%;
     }
   }
 </style>
