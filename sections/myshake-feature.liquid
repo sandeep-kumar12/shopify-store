@@ -141,7 +141,7 @@
     {%- if slide_blocks.size > 1 -%}
       <div class="myshake-feature__progress" aria-hidden="false">
         <div class="myshake-feature__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <span class="myshake-feature__progress-fill"></span>
+          <span class="myshake-feature__progress-fill" style="width: {{ 100.0 | divided_by: slide_blocks.size }}%;"></span>
         </div>
       </div>
     {%- endif -%}
