@@ -1,35 +1,3 @@
-{%- style -%}
-  #shopify-section-{{ section.id }} {
-    --hm-teal: {{ section.settings.color_teal }};
-    --hm-green: {{ section.settings.color_green }};
-    --hm-white: {{ section.settings.color_white }};
-    --hm-split: {{ section.settings.bar_split }}%;
-
-    --hm-head-size: {{ section.settings.headline_size }}px;
-    --hm-head-lh: {{ section.settings.headline_lh }};
-    --hm-head-ls: {{ section.settings.headline_ls }}em;
-
-    --hm-live-size: {{ section.settings.live_size }}px;
-    --hm-live-lh: {{ section.settings.live_lh }};
-    --hm-live-ls: {{ section.settings.live_ls }}em;
-
-    --hm-eye-size: {{ section.settings.eyebrow_size }}px;
-    --hm-eye-lh: {{ section.settings.eyebrow_lh }};
-    --hm-eye-ls: {{ section.settings.eyebrow_ls }}em;
-
-    --hm-cta-size: {{ section.settings.cta_size }}px;
-    --hm-cta-lh: {{ section.settings.cta_lh }};
-    --hm-cta-ls: {{ section.settings.cta_ls }}em;
-
-    --hm-gap-top: {{ section.settings.gap_above_bar }}px;
-    --hm-gap-bottom: {{ section.settings.gap_below_bar }}px;
-    --hm-cluster-y: {{ section.settings.cluster_vertical }}%;
-    --hm-text-right: {{ section.settings.text_right_offset }}%;
-    --hm-cta-x: {{ section.settings.cta_left }}%;
-    --hm-cta-y: {{ section.settings.cta_bottom }}%;
-  }
-{%- endstyle -%}
-
 <div
   class="hero-myshake color-{{ section.settings.color_scheme }}"
   id="hero-myshake-{{ section.id }}"
@@ -59,17 +27,9 @@
         {%- else -%}
           {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
         {%- endif -%}
-        {%- if section.settings.show_overlay -%}
-          <span class="hero-myshake__overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></span>
-        {%- endif -%}
       </div>
 
       <div class="hero-myshake__stage">
-        {%- comment -%}
-          Cluster = top text + bar + bottom text as ONE stack.
-          Font size / line-height / letter-spacing change → stack grows,
-          but relative positions stay exactly like the design.
-        {%- endcomment -%}
         <div class="hero-myshake__cluster">
           <div class="hero-myshake__top">
             {%- if block.settings.text_top_line1 != blank -%}
@@ -159,6 +119,11 @@
 
 <style>
   #shopify-section-{{ section.id }} .hero-myshake {
+    --hm-teal: {{ section.settings.color_teal }};
+    --hm-green: {{ section.settings.color_green }};
+    --hm-white: {{ section.settings.color_white }};
+    --hm-split: {{ section.settings.bar_split }}%;
+
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -193,16 +158,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: {{ section.settings.image_position }};
+    object-position: center 12%;
     display: block;
-    filter: grayscale({{ section.settings.grayscale }}%);
-  }
-
-  #shopify-section-{{ section.id }} .hero-myshake__overlay {
-    position: absolute;
-    inset: 0;
-    background: #000;
-    pointer-events: none;
+    filter: grayscale(100%);
   }
 
   #shopify-section-{{ section.id }} .hero-myshake__stage {
@@ -211,16 +169,15 @@
     z-index: 2;
   }
 
-  /* ONE stack: top → bar → bottom. Positions stay image-like when type changes. */
+  /* top + bar + bottom = one stack (image positions) */
   #shopify-section-{{ section.id }} .hero-myshake__cluster {
     position: absolute;
     left: 0;
     right: 0;
-    top: var(--hm-cluster-y);
+    top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    align-items: stretch;
     width: 100%;
     z-index: 2;
   }
@@ -228,34 +185,33 @@
   #shopify-section-{{ section.id }} .hero-myshake__top,
   #shopify-section-{{ section.id }} .hero-myshake__bottom {
     margin-left: var(--hm-split);
-    padding-right: max(1rem, var(--hm-text-right));
+    padding-right: 8%;
     box-sizing: border-box;
   }
 
   #shopify-section-{{ section.id }} .hero-myshake__top {
-    margin-bottom: var(--hm-gap-top);
+    margin-bottom: 8px;
   }
 
   #shopify-section-{{ section.id }} .hero-myshake__bottom {
-    margin-top: var(--hm-gap-bottom);
+    margin-top: 8px;
   }
 
+  /* ===== Typography: yahan se font-size / line-height / letter-spacing edit karo ===== */
   #shopify-section-{{ section.id }} .hero-myshake__line {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
-    font-size: clamp(14px, 0.45em + 2.5vw, var(--hm-head-size));
-    line-height: var(--hm-head-lh);
-    letter-spacing: var(--hm-head-ls);
+    font-size: clamp(14px, 4vw, 48px);
+    line-height: 1.2;
+    letter-spacing: 0;
     color: var(--hm-white);
   }
 
-  /* Full-bleed bar; Live sits on teal edge, Perform starts on green — same split as headlines */
   #shopify-section-{{ section.id }} .hero-myshake__bar {
     display: flex;
     align-items: stretch;
     width: 100%;
-    min-height: 1em;
   }
 
   #shopify-section-{{ section.id }} .hero-myshake__bar-left {
@@ -305,34 +261,39 @@
     justify-content: center;
     font-family: 'Space Grotesk', 'Poppins', sans-serif;
     color: var(--hm-white);
-    line-height: var(--hm-eye-lh);
-    letter-spacing: var(--hm-eye-ls);
     min-width: 0;
   }
 
-  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .label,
-  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .sub {
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .label {
     display: block;
-    font-size: clamp(8px, 0.15em + 0.7vw, var(--hm-eye-size));
+    font-weight: 500;
+    font-size: clamp(8px, 0.85vw, 13px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .label { font-weight: 500; }
   #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .sub {
+    display: block;
     font-weight: 400;
-    font-size: clamp(7px, 0.12em + 0.6vw, calc(var(--hm-eye-size) * 0.88));
+    font-size: clamp(7px, 0.75vw, 12px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
     margin-top: 0.12em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #shopify-section-{{ section.id }} .hero-myshake__live,
   #shopify-section-{{ section.id }} .hero-myshake__perform {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    font-size: clamp(16px, 0.7em + 3.2vw, var(--hm-live-size));
-    line-height: var(--hm-live-lh);
-    letter-spacing: var(--hm-live-ls);
+    font-size: clamp(16px, 4.8vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.02em;
     white-space: nowrap;
     flex-shrink: 0;
   }
@@ -351,8 +312,8 @@
 
   #shopify-section-{{ section.id }} .hero-myshake__cta {
     position: absolute;
-    left: var(--hm-cta-x);
-    bottom: var(--hm-cta-y);
+    left: 6%;
+    bottom: 14%;
     z-index: 4;
     display: inline-flex;
     align-items: center;
@@ -364,9 +325,9 @@
     color: var(--hm-white);
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
-    font-size: clamp(10px, 0.25em + 0.85vw, var(--hm-cta-size));
-    line-height: var(--hm-cta-lh);
-    letter-spacing: var(--hm-cta-ls);
+    font-size: clamp(10px, 1.2vw, 13px);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
     font-weight: 600;
     text-transform: uppercase;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
@@ -390,7 +351,9 @@
     font-weight: 700;
   }
 
-  #shopify-section-{{ section.id }} .hero-myshake__cta-label .sep { opacity: 0.85; }
+  #shopify-section-{{ section.id }} .hero-myshake__cta-label .sep {
+    opacity: 0.85;
+  }
 
   #shopify-section-{{ section.id }} .hero-myshake__cta-bolt {
     display: inline-flex;
@@ -437,17 +400,17 @@
 
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} .hero-myshake {
+      --hm-split: 52%;
       aspect-ratio: {{ section.settings.aspect_mobile }};
     }
 
-    #shopify-section-{{ section.id }} {
-      --hm-split: {{ section.settings.bar_split_mobile }}%;
-      --hm-cluster-y: {{ section.settings.cluster_vertical_mobile }}%;
-      --hm-cta-x: 4%;
-      --hm-cta-y: 7%;
-      --hm-text-right: 4%;
-      --hm-gap-top: {{ section.settings.gap_above_bar_mobile }}px;
-      --hm-gap-bottom: {{ section.settings.gap_below_bar_mobile }}px;
+    #shopify-section-{{ section.id }} .hero-myshake__cluster {
+      top: 56%;
+    }
+
+    #shopify-section-{{ section.id }} .hero-myshake__top,
+    #shopify-section-{{ section.id }} .hero-myshake__bottom {
+      padding-right: 4%;
     }
 
     #shopify-section-{{ section.id }} .hero-myshake__eyebrow {
@@ -457,6 +420,11 @@
     #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .label,
     #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .sub {
       white-space: normal;
+    }
+
+    #shopify-section-{{ section.id }} .hero-myshake__cta {
+      left: 4%;
+      bottom: 7%;
     }
   }
 </style>
@@ -510,88 +478,183 @@
 {
   "name": "MyShake Hero",
   "settings": [
-    { "type": "range", "id": "autoplay_speed", "label": "Autoplay speed (seconds)", "min": 2, "max": 12, "step": 1, "default": 5 },
-
-    { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "color_teal", "label": "Teal", "default": "#105254" },
-    { "type": "color", "id": "color_green", "label": "Lime green", "default": "#A5ED64" },
-    { "type": "color", "id": "color_white", "label": "White / text", "default": "#FFFFFF" },
-    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
-
-    { "type": "header", "content": "Layout lock (image positions)" },
-    { "type": "range", "id": "bar_split", "label": "Bar split / headline lock edge", "min": 45, "max": 70, "step": 1, "unit": "%", "default": 55, "info": "Top + bottom text left edge = this split. Matches “to Perform”." },
-    { "type": "range", "id": "cluster_vertical", "label": "Text cluster vertical center", "min": 40, "max": 65, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "gap_above_bar", "label": "Gap above bar", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 8 },
-    { "type": "range", "id": "gap_below_bar", "label": "Gap below bar", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 8 },
-    { "type": "range", "id": "text_right_offset", "label": "Headline right padding", "min": 2, "max": 20, "step": 1, "unit": "%", "default": 8 },
-    { "type": "range", "id": "cta_left", "label": "CTA left", "min": 2, "max": 28, "step": 1, "unit": "%", "default": 6 },
-    { "type": "range", "id": "cta_bottom", "label": "CTA bottom", "min": 4, "max": 28, "step": 1, "unit": "%", "default": 14 },
-
-    { "type": "header", "content": "Headline — size / line-height / spacing" },
-    { "type": "range", "id": "headline_size", "label": "Font size", "min": 18, "max": 80, "step": 1, "unit": "px", "default": 48 },
-    { "type": "range", "id": "headline_lh", "label": "Line height", "min": 0.9, "max": 1.6, "step": 0.1, "default": 1.2 },
-    { "type": "range", "id": "headline_ls", "label": "Letter spacing", "min": -0.04, "max": 0.08, "step": 0.01, "unit": "em", "default": 0 },
-
-    { "type": "header", "content": "Live / to Perform — size / line-height / spacing" },
-    { "type": "range", "id": "live_size", "label": "Font size", "min": 22, "max": 96, "step": 1, "unit": "px", "default": 64 },
-    { "type": "range", "id": "live_lh", "label": "Line height", "min": 0.8, "max": 1.4, "step": 0.1, "default": 1 },
-    { "type": "range", "id": "live_ls", "label": "Letter spacing", "min": -0.05, "max": 0.06, "step": 0.01, "unit": "em", "default": -0.02 },
-
-    { "type": "header", "content": "Eyebrow — size / line-height / spacing" },
-    { "type": "range", "id": "eyebrow_size", "label": "Font size", "min": 8, "max": 20, "step": 1, "unit": "px", "default": 13 },
-    { "type": "range", "id": "eyebrow_lh", "label": "Line height", "min": 1, "max": 1.6, "step": 0.1, "default": 1.2 },
-    { "type": "range", "id": "eyebrow_ls", "label": "Letter spacing", "min": -0.02, "max": 0.08, "step": 0.01, "unit": "em", "default": 0.01 },
-
-    { "type": "header", "content": "CTA — size / line-height / spacing" },
-    { "type": "range", "id": "cta_size", "label": "Font size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 13 },
-    { "type": "range", "id": "cta_lh", "label": "Line height", "min": 1, "max": 1.6, "step": 0.1, "default": 1.2 },
-    { "type": "range", "id": "cta_ls", "label": "Letter spacing", "min": 0, "max": 0.16, "step": 0.01, "unit": "em", "default": 0.04 },
-
-    { "type": "header", "content": "Image" },
-    { "type": "select", "id": "image_position", "label": "Image position", "default": "center 12%", "options": [
-      { "value": "center top", "label": "Top" },
-      { "value": "center 12%", "label": "Upper" },
-      { "value": "center center", "label": "Center" },
-      { "value": "center bottom", "label": "Bottom" }
-    ]},
-    { "type": "range", "id": "grayscale", "label": "Grayscale", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 100 },
-    { "type": "checkbox", "id": "show_overlay", "label": "Show dark overlay", "default": true },
-    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 70, "step": 5, "unit": "%", "default": 25 },
-
-    { "type": "header", "content": "Aspect ratios" },
-    { "type": "text", "id": "aspect_desktop", "label": "Desktop", "default": "1442 / 753" },
-    { "type": "text", "id": "aspect_tablet", "label": "Tablet", "default": "3 / 2" },
-    { "type": "text", "id": "aspect_mobile", "label": "Mobile", "default": "4 / 5" },
-
-    { "type": "header", "content": "Mobile layout" },
-    { "type": "range", "id": "bar_split_mobile", "label": "Mobile bar split", "min": 48, "max": 68, "step": 1, "unit": "%", "default": 52 },
-    { "type": "range", "id": "cluster_vertical_mobile", "label": "Mobile cluster vertical", "min": 45, "max": 70, "step": 1, "unit": "%", "default": 56 },
-    { "type": "range", "id": "gap_above_bar_mobile", "label": "Mobile gap above bar", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 6 },
-    { "type": "range", "id": "gap_below_bar_mobile", "label": "Mobile gap below bar", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 6 }
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed (seconds)",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Teal",
+      "default": "#105254"
+    },
+    {
+      "type": "color",
+      "id": "color_green",
+      "label": "Lime green",
+      "default": "#A5ED64"
+    },
+    {
+      "type": "color",
+      "id": "color_white",
+      "label": "White / text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "bar_split",
+      "label": "Bar split (teal width)",
+      "min": 45,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "header",
+      "content": "Aspect ratios"
+    },
+    {
+      "type": "text",
+      "id": "aspect_desktop",
+      "label": "Desktop",
+      "default": "1442 / 753"
+    },
+    {
+      "type": "text",
+      "id": "aspect_tablet",
+      "label": "Tablet",
+      "default": "3 / 2"
+    },
+    {
+      "type": "text",
+      "id": "aspect_mobile",
+      "label": "Mobile",
+      "default": "4 / 5"
+    }
   ],
   "blocks": [
     {
       "type": "slide",
       "name": "Slide",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Background image" },
-        { "type": "header", "content": "Top text" },
-        { "type": "text", "id": "text_top_line1", "label": "Top line 1", "default": "Nutrition" },
-        { "type": "text", "id": "text_top_line2", "label": "Top line 2", "default": "that's made" },
-        { "type": "header", "content": "Colored bar" },
-        { "type": "text", "id": "eyebrow_label", "label": "Eyebrow label", "default": "Performance Focused" },
-        { "type": "text", "id": "eyebrow_sub", "label": "Eyebrow sub label", "default": "Sports Nutrition Brand" },
-        { "type": "text", "id": "heading_live", "label": "Bar heading (green text)", "default": "Live" },
-        { "type": "text", "id": "heading_perform", "label": "Bar heading (green block)", "default": "to Perform" },
-        { "type": "header", "content": "Bottom text" },
-        { "type": "text", "id": "text_bottom", "label": "Bottom line", "default": "not bulk up." },
-        { "type": "header", "content": "CTA button" },
-        { "type": "checkbox", "id": "show_cta", "label": "Show CTA", "default": true },
-        { "type": "text", "id": "cta_prefix", "label": "Prefix", "default": "UP TO" },
-        { "type": "text", "id": "cta_highlight", "label": "Highlight", "default": "30% Off" },
-        { "type": "text", "id": "cta_label", "label": "Label", "default": "SHOP NOW" },
-        { "type": "url", "id": "cta_link", "label": "Link" },
-        { "type": "checkbox", "id": "show_bolt", "label": "Show lightning badge", "default": true }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image"
+        },
+        {
+          "type": "header",
+          "content": "Top text"
+        },
+        {
+          "type": "text",
+          "id": "text_top_line1",
+          "label": "Top line 1",
+          "default": "Nutrition"
+        },
+        {
+          "type": "text",
+          "id": "text_top_line2",
+          "label": "Top line 2",
+          "default": "that's made"
+        },
+        {
+          "type": "header",
+          "content": "Colored bar"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_label",
+          "label": "Eyebrow label",
+          "default": "Performance Focused"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow_sub",
+          "label": "Eyebrow sub label",
+          "default": "Sports Nutrition Brand"
+        },
+        {
+          "type": "text",
+          "id": "heading_live",
+          "label": "Bar heading (green text)",
+          "default": "Live"
+        },
+        {
+          "type": "text",
+          "id": "heading_perform",
+          "label": "Bar heading (green block)",
+          "default": "to Perform"
+        },
+        {
+          "type": "header",
+          "content": "Bottom text"
+        },
+        {
+          "type": "text",
+          "id": "text_bottom",
+          "label": "Bottom line",
+          "default": "not bulk up."
+        },
+        {
+          "type": "header",
+          "content": "CTA button"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_cta",
+          "label": "Show CTA",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "cta_prefix",
+          "label": "Prefix",
+          "default": "UP TO"
+        },
+        {
+          "type": "text",
+          "id": "cta_highlight",
+          "label": "Highlight",
+          "default": "30% Off"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Label",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_bolt",
+          "label": "Show lightning badge",
+          "default": true
+        }
       ]
     }
   ],
@@ -599,18 +662,7 @@
     {
       "name": "MyShake Hero",
       "blocks": [
-        { "type": "slide" },
-        {
-          "type": "slide",
-          "settings": {
-            "text_top_line1": "Fuel that",
-            "text_top_line2": "helps you",
-            "heading_live": "Train",
-            "heading_perform": "to Win",
-            "text_bottom": "go further.",
-            "cta_highlight": "25% Off"
-          }
-        }
+        { "type": "slide" }
       ]
     }
   ]
