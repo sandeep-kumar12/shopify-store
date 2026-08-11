@@ -1,0 +1,647 @@
+{%- liquid
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+-%}
+
+<div
+  class="myshake-feature color-{{ section.settings.color_scheme }}"
+  id="myshake-feature-{{ section.id }}"
+  data-slide-duration="{{ section.settings.slide_duration }}"
+>
+  <div class="myshake-feature__inner page-width">
+    <div class="myshake-feature__grid">
+      {%- for block in slide_blocks -%}
+        <div
+          class="myshake-feature__slide{% if forloop.first %} is-active{% endif %}"
+          data-slide-index="{{ forloop.index0 }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="myshake-feature__text">
+            <div class="myshake-feature__icons">
+              {%- for i in (1..4) -%}
+                {%- liquid
+                  case i
+                    when 1
+                      assign icon_img = block.settings.icon_1_image
+                      assign icon_l1 = block.settings.icon_1_line1
+                      assign icon_l2 = block.settings.icon_1_line2
+                    when 2
+                      assign icon_img = block.settings.icon_2_image
+                      assign icon_l1 = block.settings.icon_2_line1
+                      assign icon_l2 = block.settings.icon_2_line2
+                    when 3
+                      assign icon_img = block.settings.icon_3_image
+                      assign icon_l1 = block.settings.icon_3_line1
+                      assign icon_l2 = block.settings.icon_3_line2
+                    when 4
+                      assign icon_img = block.settings.icon_4_image
+                      assign icon_l1 = block.settings.icon_4_line1
+                      assign icon_l2 = block.settings.icon_4_line2
+                  endcase
+                -%}
+                {%- if icon_l1 != blank or icon_img != blank -%}
+                  <div class="myshake-feature__icon-item">
+                    {%- if icon_img != blank -%}
+                      <img
+                        src="{{ icon_img | image_url: width: 88 }}"
+                        alt="{{ icon_l1 | escape }}"
+                        loading="lazy"
+                        width="{{ icon_img.width }}"
+                        height="{{ icon_img.height }}"
+                      >
+                    {%- endif -%}
+                    <div class="myshake-feature__icon-text">
+                      {%- if icon_l1 != blank -%}<p class="icon-line1">{{ icon_l1 }}</p>{%- endif -%}
+                      {%- if icon_l2 != blank -%}<p class="icon-line2">{{ icon_l2 }}</p>{%- endif -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+            <h2 class="myshake-feature__heading">
+              {%- if block.settings.heading_line1 != blank -%}
+                <span class="line1">{{ block.settings.heading_line1 }}</span>
+              {%- endif -%}
+              {%- if block.settings.heading_line2 != blank -%}
+                <strong class="line2">{{ block.settings.heading_line2 }}</strong>
+              {%- endif -%}
+            </h2>
+
+            {%- if block.settings.subheading != blank -%}
+              <p class="myshake-feature__subheading">{{ block.settings.subheading }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.price != blank or block.settings.button_label != blank -%}
+              <a
+                href="{{ block.settings.button_link | default: '#' }}"
+                class="myshake-feature__cta"
+                {% if block.settings.button_link == blank %}aria-disabled="true"{% endif %}
+              >
+                {%- if block.settings.price != blank -%}
+                  <span class="price">{{ block.settings.price }}</span>
+                {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  <span class="divider">|</span>
+                  <span class="label">{{ block.settings.button_label }}</span>
+                {%- endif -%}
+                <span class="btn-icon" aria-hidden="true">
+                  {%- if block.settings.button_icon != blank -%}
+                    <img
+                      src="{{ block.settings.button_icon | image_url: width: 40 }}"
+                      alt=""
+                      loading="lazy"
+                      width="{{ block.settings.button_icon.width }}"
+                      height="{{ block.settings.button_icon.height }}"
+                    >
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
+                    </svg>
+                  {%- endif -%}
+                </span>
+              </a>
+            {%- endif -%}
+          </div>
+
+          <div class="myshake-feature__media">
+            {%- if block.settings.image != blank -%}
+              <img
+                class="product-image"
+                src="{{ block.settings.image | image_url: width: 1100 }}"
+                srcset="
+                  {{ block.settings.image | image_url: width: 550 }} 550w,
+                  {{ block.settings.image | image_url: width: 900 }} 900w,
+                  {{ block.settings.image | image_url: width: 1100 }} 1100w
+                "
+                sizes="(max-width: 749px) 100vw, 50vw"
+                alt="{{ block.settings.image.alt | default: block.settings.heading_line2 | escape }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+              >
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+
+            {%- if block.settings.badge_image != blank -%}
+              <div class="myshake-feature__badge">
+                <img
+                  src="{{ block.settings.badge_image | image_url: width: 300 }}"
+                  alt=""
+                  loading="lazy"
+                  width="{{ block.settings.badge_image.width }}"
+                  height="{{ block.settings.badge_image.height }}"
+                >
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if slide_blocks.size > 1 -%}
+      <div class="myshake-feature__progress" aria-hidden="false">
+        <div class="myshake-feature__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="myshake-feature__progress-fill"></span>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .myshake-feature,
+  #shopify-section-{{ section.id }} .myshake-feature * {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature {
+    --mf-heading: {{ section.settings.color_heading_line1 }};
+    --mf-btn: {{ section.settings.color_heading }};
+    --mf-accent: {{ section.settings.color_accent }};
+    --mf-text: {{ section.settings.color_text }};
+    --mf-fill: {{ section.settings.color_heading }};
+    --mf-track: {{ section.settings.color_accent }};
+
+    padding-top: {{ section.settings.margin_top }}px;
+    padding-bottom: {{ section.settings.margin_bottom }}px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__inner {
+    width: 100%;
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    padding-left: {{ section.settings.padding_left }}px;
+    padding-right: {{ section.settings.padding_right }}px;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__grid {
+    position: relative;
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__slide {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(24px, 4vw, 48px);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__slide.is-active {
+    display: flex;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__text {
+    flex: 1 1 42%;
+    min-width: 0;
+    max-width: 420px;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(14px, 2vw, 22px) clamp(16px, 2.5vw, 28px);
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icons:empty {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icon-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icon-item img {
+    width: clamp(28px, 3vw, 36px);
+    height: auto;
+    max-height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icon-text {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__icon-text .icon-line1,
+  #shopify-section-{{ section.id }} .myshake-feature__icon-text .icon-line2 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    font-size: clamp(12px, 1.1vw, 14px);
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: var(--mf-text);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__heading {
+    margin: 0 0 0.35em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: clamp(32px, 4.2vw, 56px);
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: var(--mf-heading);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__heading .line1,
+  #shopify-section-{{ section.id }} .myshake-feature__heading .line2 {
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__heading .line2 {
+    font-weight: 700;
+    color: var(--mf-heading);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__subheading {
+    margin: 0 0 1.25em;
+    font-size: clamp(14px, 1.25vw, 18px);
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--mf-text);
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    max-width: 100%;
+    padding: 0.55em 0.55em 0.55em 1.2em;
+    border-radius: 999px;
+    background: var(--mf-btn);
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(14px, 1.3vw, 18px);
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta .price {
+    color: var(--mf-accent);
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta .divider {
+    opacity: 0.45;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta .label {
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7em;
+    height: 1.7em;
+    min-width: 26px;
+    min-height: 26px;
+    margin-left: 0.15em;
+    border-radius: 50%;
+    background: var(--mf-accent);
+    color: var(--mf-btn);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__cta .btn-icon img,
+  #shopify-section-{{ section.id }} .myshake-feature__cta .btn-icon svg {
+    width: 55%;
+    height: 55%;
+    object-fit: contain;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__media {
+    flex: 1 1 50%;
+    min-width: 0;
+    max-width: 540px;
+    position: relative;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__media .product-image,
+  #shopify-section-{{ section.id }} .myshake-feature__media .placeholder-svg {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__badge {
+    position: absolute;
+    top: 2%;
+    right: 10%;
+    width: clamp(64px, 18%, 120px);
+    aspect-ratio: 1 / 1;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Progress: fills only while current slide is active (segmented) */
+  #shopify-section-{{ section.id }} .myshake-feature__progress {
+    margin-top: clamp(20px, 3vw, 32px);
+    display: flex;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__progress-track {
+    position: relative;
+    width: 90px;
+    height: 5px;
+    background: var(--mf-track);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .myshake-feature__progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    border-radius: 2px;
+    background: var(--mf-fill);
+    will-change: width;
+  }
+
+  /* Mobile: image top, content bottom, full width */
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .myshake-feature__inner {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__slide.is-active {
+      flex-direction: column-reverse;
+      align-items: stretch;
+      gap: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__text,
+    #shopify-section-{{ section.id }} .myshake-feature__media {
+      flex: 0 0 auto;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__heading {
+      font-size: clamp(28px, 9vw, 40px);
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__badge {
+      width: 22%;
+      right: 8%;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__cta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    #shopify-section-{{ section.id }} .myshake-feature__text {
+      max-width: 340px;
+    }
+
+    #shopify-section-{{ section.id }} .myshake-feature__media {
+      max-width: 420px;
+    }
+  }
+</style>
+
+{%- if slide_blocks.size > 1 -%}
+<script>
+  (function () {
+    var root = document.getElementById('myshake-feature-{{ section.id }}');
+    if (!root) return;
+
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.myshake-feature__slide'));
+    var track = root.querySelector('.myshake-feature__progress-track');
+    var fill = track ? track.querySelector('.myshake-feature__progress-fill') : null;
+    var duration = parseInt(root.dataset.slideDuration, 10) || 5000;
+    var total = slides.length;
+    if (total < 2 || !fill) return;
+
+    var current = 0;
+    var timer = null;
+
+    function segmentStart(i) { return (i / total) * 100; }
+    function segmentEnd(i) { return ((i + 1) / total) * 100; }
+
+    function setFillInstant(pct) {
+      fill.style.transition = 'none';
+      fill.style.width = pct + '%';
+      void fill.offsetWidth;
+    }
+
+    function animateFill(from, to) {
+      setFillInstant(from);
+      fill.style.transition = 'width linear ' + duration + 'ms';
+      fill.style.width = to + '%';
+      if (track) track.setAttribute('aria-valuenow', String(Math.round(to)));
+    }
+
+    function runSlide(index) {
+      slides[current].classList.remove('is-active');
+      current = ((index % total) + total) % total;
+      slides[current].classList.add('is-active');
+
+      var from = segmentStart(current);
+      var to = segmentEnd(current);
+      if (current === 0) setFillInstant(0);
+      animateFill(from, to);
+
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        runSlide(current + 1);
+      }, duration);
+    }
+
+    if (track) {
+      track.addEventListener('click', function () {
+        clearTimeout(timer);
+        runSlide(current + 1);
+      });
+    }
+
+    requestAnimationFrame(function () {
+      runSlide(0);
+    });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "MyShake Product Feature",
+  "tag": "section",
+  "class": "section-myshake-feature",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Bottom margin",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Left padding",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "Right padding",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "range",
+      "id": "slide_duration",
+      "label": "Slide duration",
+      "min": 2000,
+      "max": 9500,
+      "step": 500,
+      "unit": "ms",
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_heading_line1",
+      "label": "Heading color",
+      "default": "#0F4C4C"
+    },
+    {
+      "type": "color",
+      "id": "color_heading",
+      "label": "Button / progress fill",
+      "default": "#0F4C4C"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Accent (green)",
+      "default": "#A5ED64"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Body text",
+      "default": "#333333"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "header", "content": "Text" },
+        { "type": "text", "id": "heading_line1", "label": "Heading line 1", "default": "Built for" },
+        { "type": "text", "id": "heading_line2", "label": "Heading line 2", "default": "Performance." },
+        { "type": "text", "id": "subheading", "label": "Subheading", "default": "Not for the bulk culture!" },
+        { "type": "header", "content": "Button" },
+        { "type": "text", "id": "price", "label": "Price", "default": "₹2099" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "BUY NOW" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "image_picker", "id": "button_icon", "label": "Button icon" },
+        { "type": "header", "content": "Product image" },
+        { "type": "image_picker", "id": "image", "label": "Product image" },
+        { "type": "image_picker", "id": "badge_image", "label": "Badge image" },
+        { "type": "header", "content": "Feature icon 1" },
+        { "type": "image_picker", "id": "icon_1_image", "label": "Icon 1 image" },
+        { "type": "text", "id": "icon_1_line1", "label": "Icon 1 - line 1", "default": "9 Essential" },
+        { "type": "text", "id": "icon_1_line2", "label": "Icon 1 - line 2", "default": "Amino acids" },
+        { "type": "header", "content": "Feature icon 2" },
+        { "type": "image_picker", "id": "icon_2_image", "label": "Icon 2 image" },
+        { "type": "text", "id": "icon_2_line1", "label": "Icon 2 - line 1", "default": "~1 Billion" },
+        { "type": "text", "id": "icon_2_line2", "label": "Icon 2 - line 2", "default": "CFU Probiotics" },
+        { "type": "header", "content": "Feature icon 3" },
+        { "type": "image_picker", "id": "icon_3_image", "label": "Icon 3 image" },
+        { "type": "text", "id": "icon_3_line1", "label": "Icon 3 - line 1", "default": "+1g Added" },
+        { "type": "text", "id": "icon_3_line2", "label": "Icon 3 - line 2", "default": "1g Leucine" },
+        { "type": "header", "content": "Feature icon 4" },
+        { "type": "image_picker", "id": "icon_4_image", "label": "Icon 4 image" },
+        { "type": "text", "id": "icon_4_line1", "label": "Icon 4 - line 1", "default": "Fortified with" },
+        { "type": "text", "id": "icon_4_line2", "label": "Icon 4 - line 2", "default": "DigeZyme®" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MyShake Product Feature",
+      "blocks": [
+        { "type": "slide" },
+        {
+          "type": "slide",
+          "settings": {
+            "heading_line1": "Built for",
+            "heading_line2": "Recovery.",
+            "subheading": "Fuel that keeps you going!"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
