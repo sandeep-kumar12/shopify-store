@@ -12,7 +12,12 @@
             "eyebrow_sub": "Sports Nutrition Brand",
             "heading_live": "Live",
             "heading_perform": "to Perform",
-            "text_bottom": "not bulk up."
+            "text_bottom": "not bulk up.",
+            "show_cta": true,
+            "cta_prefix": "UP TO",
+            "cta_highlight": "30% Off",
+            "cta_label": "SHOP NOW",
+            "show_bolt": true
           }
         },
         "slide_2": {
@@ -24,7 +29,12 @@
             "eyebrow_sub": "Sports Nutrition Brand",
             "heading_live": "Train",
             "heading_perform": "to Win",
-            "text_bottom": "go further."
+            "text_bottom": "go further.",
+            "show_cta": true,
+            "cta_prefix": "UP TO",
+            "cta_highlight": "25% Off",
+            "cta_label": "SHOP NOW",
+            "show_bolt": true
           }
         }
       },
@@ -34,9 +44,36 @@
         "color_teal": "#105254",
         "color_green": "#A5ED64",
         "color_white": "#FFFFFF",
+        "bar_split": 55,
+        "cluster_vertical": 50,
+        "gap_above_bar": 8,
+        "gap_below_bar": 8,
+        "text_right_offset": 8,
+        "cta_left": 6,
+        "cta_bottom": 14,
+        "headline_size": 48,
+        "headline_lh": 1.2,
+        "headline_ls": 0,
+        "live_size": 64,
+        "live_lh": 1,
+        "live_ls": -0.02,
+        "eyebrow_size": 13,
+        "eyebrow_lh": 1.2,
+        "eyebrow_ls": 0.01,
+        "cta_size": 13,
+        "cta_lh": 1.2,
+        "cta_ls": 0.04,
+        "image_position": "center 12%",
+        "grayscale": 100,
+        "show_overlay": true,
+        "overlay_opacity": 25,
         "aspect_desktop": "1442 / 753",
         "aspect_tablet": "3 / 2",
-        "aspect_mobile": "4 / 5"
+        "aspect_mobile": "4 / 5",
+        "bar_split_mobile": 52,
+        "cluster_vertical_mobile": 56,
+        "gap_above_bar_mobile": 6,
+        "gap_below_bar_mobile": 6
       }
     }
   },
