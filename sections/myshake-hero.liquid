@@ -1,778 +1,371 @@
-{% comment %}
-  MY SHAKE Hero — full-bleed split-bar hero with slides (settings + blocks)
-{% endcomment %}
-
-{% assign accent = section.settings.accent_color %}
-{% assign teal = section.settings.teal_color %}
-{% assign text_light = section.settings.text_light %}
-{% assign overlay = section.settings.overlay_opacity | divided_by: 100.0 %}
-
-<section
-  id="MyshakeHero-{{ section.id }}"
-  class="myshake-hero"
-  style="
-    --mh-accent: {{ accent }};
-    --mh-teal: {{ teal }};
-    --mh-text: {{ text_light }};
-    --mh-overlay: {{ overlay }};
-    --mh-min-height: {{ section.settings.min_height }}vh;
-    --mh-bar-split: {{ section.settings.bar_split }}%;
-    --mh-headline-size: {{ section.settings.headline_size }}px;
-    --mh-live-size: {{ section.settings.live_size }}px;
-  "
-  data-section-id="{{ section.id }}"
-  data-autoplay="{{ section.settings.autoplay }}"
+<div
+  class="hero-myshake color-{{ section.settings.color_scheme }}"
+  id="hero-myshake-{{ section.id }}"
   data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+  data-slide-count="{{ section.blocks.size }}"
 >
-  <div class="myshake-hero__viewport">
-    {% if section.blocks.size == 0 %}
-      <div class="myshake-hero__slide is-active">
-        <div class="myshake-hero__media">
-          <div class="myshake-hero__placeholder" aria-hidden="true"></div>
-          <div class="myshake-hero__overlay"></div>
-        </div>
-        <div class="myshake-hero__content page-width">
-          <div class="myshake-hero__copy">
-            <p class="myshake-hero__line myshake-hero__line--top">Nutrition that's made</p>
-            <div class="myshake-hero__bar" aria-hidden="false">
-              <div class="myshake-hero__bar-left">
-                <span class="myshake-hero__bar-rule"></span>
-                <span class="myshake-hero__bar-meta">
-                  <strong>Performance Focused</strong>
-                  <span>Sports Nutrition Brand</span>
-                </span>
-                <span class="myshake-hero__live">Live</span>
-              </div>
-              <div class="myshake-hero__bar-right">
-                <span class="myshake-hero__perform">to Perform</span>
-              </div>
-            </div>
-            <p class="myshake-hero__line myshake-hero__line--bottom">not bulk up.</p>
-          </div>
-          <a class="myshake-hero__cta" href="#">
-            <span class="myshake-hero__cta-text">
-              UP TO <em>30% Off</em> <span class="myshake-hero__cta-sep">|</span> SHOP NOW
-            </span>
-            <span class="myshake-hero__cta-bolt" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
-              </svg>
-            </span>
-          </a>
-        </div>
-      </div>
-    {% else %}
-      {% for block in section.blocks %}
-        {% if block.type == 'slide' %}
-          <div
-            class="myshake-hero__slide{% if forloop.first %} is-active{% endif %}"
-            {{ block.shopify_attributes }}
-            data-slide-index="{{ forloop.index0 }}"
-            {% unless forloop.first %}aria-hidden="true"{% endunless %}
+
+  {%- for block in section.blocks -%}
+    <div
+      class="hero-myshake__wrap{% if forloop.first %} is-active{% endif %}"
+      data-slide-index="{{ forloop.index0 }}"
+      {{ block.shopify_attributes }}
+    >
+
+      <div class="hero-myshake__bg">
+        {%- if block.settings.image != blank -%}
+          <img
+            src="{{ block.settings.image | image_url: width: 2400 }}"
+            srcset="{{ block.settings.image | image_url: width: 1200 }} 1200w,
+                    {{ block.settings.image | image_url: width: 1800 }} 1800w,
+                    {{ block.settings.image | image_url: width: 2400 }} 2400w"
+            sizes="100vw"
+            alt="{{ block.settings.image.alt | default: 'MyShake' | escape }}"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
           >
-            <div class="myshake-hero__media">
-              {% if block.settings.image != blank %}
-                {{
-                  block.settings.image
-                  | image_url: width: 2400
-                  | image_tag:
-                    loading: 'eager',
-                    class: 'myshake-hero__img',
-                    widths: '800, 1200, 1600, 2000, 2400',
-                    sizes: '100vw',
-                    alt: block.settings.image.alt | default: block.settings.headline_top
-                }}
-              {% else %}
-                <div class="myshake-hero__placeholder" aria-hidden="true"></div>
-              {% endif %}
-              <div class="myshake-hero__overlay"></div>
+        {%- else -%}
+          {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="hero-myshake__content">
+
+        <div class="hero-myshake__top">
+          <p>{{ block.settings.text_top_line1 }}</p>
+          <p>{{ block.settings.text_top_line2 }}</p>
+        </div>
+
+        <div class="hero-myshake__bar">
+          <div class="hero-myshake__bar-left">
+            <div class="hero-myshake__eyebrow">
+              <span class="hero-myshake__eyebrow-rule"></span>
+              <span class="hero-myshake__eyebrow-text">
+                <span class="label">{{ block.settings.eyebrow_label }}</span>
+                <span class="sub">{{ block.settings.eyebrow_sub }}</span>
+              </span>
             </div>
-
-            <div class="myshake-hero__content page-width">
-              <div class="myshake-hero__copy">
-                {% if block.settings.headline_top != blank %}
-                  <p class="myshake-hero__line myshake-hero__line--top">{{ block.settings.headline_top }}</p>
-                {% endif %}
-
-                <div class="myshake-hero__bar">
-                  <div class="myshake-hero__bar-left">
-                    <span class="myshake-hero__bar-rule"></span>
-                    {% if block.settings.meta_line_1 != blank or block.settings.meta_line_2 != blank %}
-                      <span class="myshake-hero__bar-meta">
-                        {% if block.settings.meta_line_1 != blank %}
-                          <strong>{{ block.settings.meta_line_1 }}</strong>
-                        {% endif %}
-                        {% if block.settings.meta_line_2 != blank %}
-                          <span>{{ block.settings.meta_line_2 }}</span>
-                        {% endif %}
-                      </span>
-                    {% endif %}
-                    {% if block.settings.bar_left_word != blank %}
-                      <span class="myshake-hero__live">{{ block.settings.bar_left_word }}</span>
-                    {% endif %}
-                  </div>
-                  <div class="myshake-hero__bar-right">
-                    {% if block.settings.bar_right_word != blank %}
-                      <span class="myshake-hero__perform">{{ block.settings.bar_right_word }}</span>
-                    {% endif %}
-                  </div>
-                </div>
-
-                {% if block.settings.headline_bottom != blank %}
-                  <p class="myshake-hero__line myshake-hero__line--bottom">{{ block.settings.headline_bottom }}</p>
-                {% endif %}
-              </div>
-
-              {% if block.settings.button_label != blank %}
-                <a
-                  class="myshake-hero__cta"
-                  href="{{ block.settings.button_link | default: '#' }}"
-                  {% if block.settings.button_link == blank %}role="link" aria-disabled="true"{% endif %}
-                >
-                  <span class="myshake-hero__cta-text">
-                    {% if block.settings.button_prefix != blank %}
-                      {{ block.settings.button_prefix }}
-                    {% endif %}
-                    {% if block.settings.button_highlight != blank %}
-                      <em>{{ block.settings.button_highlight }}</em>
-                    {% endif %}
-                    {% if block.settings.button_label != blank %}
-                      <span class="myshake-hero__cta-sep">|</span> {{ block.settings.button_label }}
-                    {% endif %}
-                  </span>
-                  {% if block.settings.show_bolt %}
-                    <span class="myshake-hero__cta-bolt" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
-                      </svg>
-                    </span>
-                  {% endif %}
-                </a>
-              {% endif %}
-            </div>
+            <div class="hero-myshake__live">{{ block.settings.heading_live }}</div>
           </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  </div>
+          <div class="hero-myshake__perform">{{ block.settings.heading_perform }}</div>
+        </div>
 
-  {% assign slide_count = section.blocks.size %}
-  {% if slide_count == 0 %}
-    {% assign slide_count = 1 %}
-  {% endif %}
+        <div class="hero-myshake__bottom">
+          <p>{{ block.settings.text_bottom }}</p>
+        </div>
 
-  {% if slide_count > 1 or section.settings.show_dots %}
-    <div class="myshake-hero__dots" role="tablist" aria-label="Hero slides">
-      {% if section.blocks.size == 0 %}
-        <button type="button" class="myshake-hero__dot is-active" aria-label="Slide 1" aria-selected="true" data-dot="0"></button>
-        <button type="button" class="myshake-hero__dot" aria-label="Slide 2" aria-selected="false" data-dot="1" tabindex="-1"></button>
-      {% else %}
-        {% for block in section.blocks %}
-          {% if block.type == 'slide' %}
-            <button
-              type="button"
-              class="myshake-hero__dot{% if forloop.first %} is-active{% endif %}"
-              aria-label="Slide {{ forloop.index }}"
-              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-              data-dot="{{ forloop.index0 }}"
-              {% unless forloop.first %}tabindex="-1"{% endunless %}
-            ></button>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+      </div>
     </div>
-  {% endif %}
-</section>
+  {%- endfor -%}
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="hero-myshake__pagination">
+      <div class="hero-myshake__pagination-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="hero-myshake__pagination-fill"></span>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
 
 <style>
-  #MyshakeHero-{{ section.id }} {
+  #shopify-section-{{ section.id }} .hero-myshake {
     position: relative;
     width: 100%;
-    min-height: var(--mh-min-height);
     overflow: hidden;
-    background: #0a0a0a;
-    color: var(--mh-text);
-    isolation: isolate;
+    aspect-ratio: {{ section.settings.aspect_desktop }};
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__viewport {
-    position: relative;
-    min-height: var(--mh-min-height);
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__slide {
+  #shopify-section-{{ section.id }} .hero-myshake__wrap {
     position: absolute;
     inset: 0;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.7s ease, visibility 0.7s ease;
+    transition: opacity 0.6s ease;
     pointer-events: none;
   }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__slide.is-active {
-    position: relative;
+  #shopify-section-{{ section.id }} .hero-myshake__wrap.is-active {
     opacity: 1;
     visibility: visible;
+    z-index: 2;
     pointer-events: auto;
-    min-height: var(--mh-min-height);
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__media {
+  #shopify-section-{{ section.id }} .hero-myshake__bg {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    z-index: 1;
   }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__img,
-  #MyshakeHero-{{ section.id }} .myshake-hero__placeholder {
+  #shopify-section-{{ section.id }} .hero-myshake__bg img,
+  #shopify-section-{{ section.id }} .hero-myshake__bg .placeholder-svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center 12%;
     display: block;
-    filter: grayscale(1) contrast(1.05);
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__placeholder {
-    background:
-      linear-gradient(120deg, #1a1a1a 0%, #2c2c2c 40%, #111 100%);
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__overlay {
+  #shopify-section-{{ section.id }} .hero-myshake__content {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, var(--mh-overlay));
-    pointer-events: none;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__content {
-    position: relative;
     z-index: 2;
-    min-height: var(--mh-min-height);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: clamp(5rem, 12vh, 7rem) clamp(1.25rem, 4vw, 4rem) clamp(4rem, 10vh, 6rem);
-    max-width: 100%;
   }
 
-  #MyshakeHero-{{ section.id }} .page-width {
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__copy {
-    width: 100%;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: clamp(0rem, 6vw, 5rem);
-    text-align: right;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__line {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-weight: 500;
-    font-size: clamp(1.75rem, 4.2vw, var(--mh-headline-size));
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    color: var(--mh-text);
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__line--top {
-    margin-bottom: 0.35rem;
-    padding-right: 0.15em;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__line--bottom {
-    margin-top: 0.35rem;
-    padding-right: 0.15em;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar {
-    display: grid;
-    grid-template-columns: minmax(140px, var(--mh-bar-split)) 1fr;
-    width: min(100%, 920px);
-    margin-left: auto;
-    min-height: clamp(3.25rem, 6vw, 4.5rem);
-    align-items: stretch;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-left {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    background: var(--mh-teal);
-    padding: 0.55rem 0.85rem 0.55rem 1rem;
-    color: var(--mh-text);
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-rule {
+  #shopify-section-{{ section.id }} .hero-myshake__top,
+  #shopify-section-{{ section.id }} .hero-myshake__bottom {
     position: absolute;
-    left: 0.85rem;
-    top: 18%;
-    bottom: 18%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.85);
+    right: 20%;
+    text-align: left;
+    max-width: 60%;
+  }
+  #shopify-section-{{ section.id }} .hero-myshake__top { top: 30%; }
+  #shopify-section-{{ section.id }} .hero-myshake__bottom { top: 68%; }
+
+  #shopify-section-{{ section.id }} .hero-myshake__top p,
+  #shopify-section-{{ section.id }} .hero-myshake__bottom p {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: clamp(14px, 4vw, 60px);
+    line-height: 1.3;
+    color: {{ section.settings.color_white }};
+    white-space: nowrap;
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-meta {
+  #shopify-section-{{ section.id }} .hero-myshake__bar {
+    position: absolute;
+    left: 0;
+    top: 50.5%;
+    width: 100%;
+    height: 14%;
+    display: flex;
+    align-items: stretch;
+    background: {{ section.settings.color_teal }};
+  }
+
+  #shopify-section-{{ section.id }} .hero-myshake__bar-left {
+    display: flex;
+    align-items: stretch;
+    flex: 0 0 55%;
+    max-width: 55%;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1vw, 30px);
+    white-space: nowrap;
+    flex: 0 0 auto;
+    margin: auto;
+  }
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-rule {
+    width: 1px;
+    align-self: stretch;
+    background: {{ section.settings.color_green }};
+    opacity: 0.6;
+  }
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
-    gap: 0.1rem;
-    margin-right: auto;
-    margin-left: 1.1rem;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: clamp(0.55rem, 1.1vw, 0.72rem);
-    line-height: 1.25;
-    letter-spacing: 0.02em;
-    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    color: {{ section.settings.color_white }};
+  }
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .label {
+    font-weight: 500;
+    font-size: clamp(8px, 0.85vw, 16px);
     white-space: nowrap;
   }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-meta strong {
-    font-weight: 700;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-meta span {
+  #shopify-section-{{ section.id }} .hero-myshake__eyebrow-text .sub {
     font-weight: 400;
-    opacity: 0.95;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__live {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.85rem, 4.5vw, var(--mh-live-size));
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--mh-accent);
+    font-size: clamp(7px, 0.75vw, 14px);
+    margin-top: 2px;
     white-space: nowrap;
-    padding-left: 0.25rem;
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__bar-right {
+  #shopify-section-{{ section.id }} .hero-myshake__live {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    background: var(--mh-accent);
-    padding: 0.55rem 1.25rem 0.55rem 0.35rem;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__perform {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.85rem, 4.5vw, var(--mh-live-size));
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--mh-teal);
-    white-space: nowrap;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__cta {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: clamp(2.5rem, 8vh, 4.5rem);
-    padding: 0.7rem 0.7rem 0.7rem 1.35rem;
-    border-radius: 999px;
-    background: var(--mh-teal);
-    color: var(--mh-text);
-    text-decoration: none;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+    padding: 0 clamp(8px, 1.5vw, 22px);
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    font-size: clamp(13px, 4.8vw, 70px);
+    color: {{ section.settings.color_green }};
+    white-space: nowrap;
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__cta-text em {
-    font-style: normal;
-    color: var(--mh-accent);
-    font-weight: 800;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__cta-sep {
-    opacity: 0.85;
-    margin: 0 0.15rem;
-  }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__cta-bolt {
-    display: inline-flex;
+  #shopify-section-{{ section.id }} .hero-myshake__perform {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--mh-accent);
-    color: var(--mh-teal);
-    flex-shrink: 0;
+    flex: 0 0 45%;
+    max-width: 45%;
+    min-width: 0;
+    background: {{ section.settings.color_green }};
+    color: {{ section.settings.color_teal }};
+    padding-left: clamp(10px, 1vw, 32px);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: clamp(13px, 4.8vw, 70px);
+    white-space: nowrap;
+    overflow: hidden;
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__dots {
+  /* Progress: fills only the active slide's segment (not a continuous loop) */
+  #shopify-section-{{ section.id }} .hero-myshake__pagination {
     position: absolute;
     left: 50%;
-    bottom: 1.35rem;
+    bottom: 22px;
     transform: translateX(-50%);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
+    z-index: 3;
   }
-
-  #MyshakeHero-{{ section.id }} .myshake-hero__dot {
-    width: 2rem;
-    height: 3px;
-    padding: 0;
-    border: 0;
-    border-radius: 2px;
+  #shopify-section-{{ section.id }} .hero-myshake__pagination-track {
+    position: relative;
+    width: 64px;
+    height: 5px;
     background: rgba(255, 255, 255, 0.35);
+    border-radius: 2px;
+    overflow: hidden;
     cursor: pointer;
-    transition: background 0.25s ease, width 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .hero-myshake__pagination-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: {{ section.settings.color_green }};
+    border-radius: 2px;
+    will-change: width;
   }
 
-  #MyshakeHero-{{ section.id }} .myshake-hero__dot.is-active {
-    background: var(--mh-accent);
-    width: 2.4rem;
-  }
-
-  @media (max-width: 749px) {
-    #MyshakeHero-{{ section.id }} .myshake-hero__content {
-      justify-content: flex-end;
-      padding-bottom: 4.5rem;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__copy {
-      margin-right: 0;
-      text-align: left;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__bar {
-      grid-template-columns: 1fr;
-      width: 100%;
-      margin-left: 0;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__bar-left {
-      justify-content: space-between;
-      min-height: 3.25rem;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__bar-right {
-      min-height: 3rem;
-      padding-left: 1rem;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__bar-meta {
-      white-space: normal;
-    }
-
-    #MyshakeHero-{{ section.id }} .myshake-hero__cta {
-      margin-top: 1.75rem;
-      width: 100%;
-      max-width: 22rem;
-      justify-content: space-between;
-    }
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .hero-myshake { aspect-ratio: {{ section.settings.aspect_mobile }}; }
+    #shopify-section-{{ section.id }} .hero-myshake__top { top: 51%; }
+    #shopify-section-{{ section.id }} .hero-myshake__bottom { top: 70%; }
+    #shopify-section-{{ section.id }} .hero-myshake__bar { top: 60%; height: 10%; }
+    #shopify-section-{{ section.id }} .hero-myshake__pagination-track { width: 60px; }
   }
 </style>
 
+{%- if section.blocks.size > 1 -%}
 <script>
   (function () {
-    var root = document.getElementById('MyshakeHero-{{ section.id }}');
+    var root = document.getElementById('hero-myshake-{{ section.id }}');
     if (!root) return;
 
-    var slides = Array.prototype.slice.call(root.querySelectorAll('.myshake-hero__slide'));
-    var dots = Array.prototype.slice.call(root.querySelectorAll('.myshake-hero__dot'));
-    if (slides.length <= 1) return;
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.hero-myshake__wrap'));
+    var track = root.querySelector('.hero-myshake__pagination-track');
+    var fill = track ? track.querySelector('.hero-myshake__pagination-fill') : null;
+    var speed = parseFloat(root.dataset.autoplaySpeed || '5');
+    var total = slides.length;
+    if (total < 2) return;
 
-    var index = 0;
+    var current = 0;
     var timer = null;
-    var autoplay = root.getAttribute('data-autoplay') === 'true';
-    var speed = parseInt(root.getAttribute('data-autoplay-speed'), 10) || 5000;
 
-    function goTo(next) {
-      if (next === index) return;
-      slides[index].classList.remove('is-active');
-      slides[index].setAttribute('aria-hidden', 'true');
-      if (dots[index]) {
-        dots[index].classList.remove('is-active');
-        dots[index].setAttribute('aria-selected', 'false');
-        dots[index].setAttribute('tabindex', '-1');
+    function segmentStart(index) {
+      return (index / total) * 100;
+    }
+
+    function segmentEnd(index) {
+      return ((index + 1) / total) * 100;
+    }
+
+    function setFillInstant(percent) {
+      if (!fill) return;
+      fill.style.transition = 'none';
+      fill.style.width = percent + '%';
+      void fill.offsetWidth;
+    }
+
+    function animateFill(fromPercent, toPercent) {
+      if (!fill) return;
+      setFillInstant(fromPercent);
+      fill.style.transition = 'width linear ' + speed + 's';
+      fill.style.width = toPercent + '%';
+      if (track) track.setAttribute('aria-valuenow', String(Math.round(toPercent)));
+    }
+
+    function runSlide(index) {
+      slides[current].classList.remove('is-active');
+      current = ((index % total) + total) % total;
+      slides[current].classList.add('is-active');
+
+      // Active slide ke hisaab se sirf uska segment fill hota hai
+      // Example: 2 slides → slide 0: 0→50%, slide 1: 50→100%, phir reset
+      var from = segmentStart(current);
+      var to = segmentEnd(current);
+
+      // Loop back to first slide: pehle 0 pe jump, phir animate
+      if (current === 0) {
+        setFillInstant(0);
       }
 
-      index = (next + slides.length) % slides.length;
+      animateFill(from, to);
 
-      slides[index].classList.add('is-active');
-      slides[index].removeAttribute('aria-hidden');
-      if (dots[index]) {
-        dots[index].classList.add('is-active');
-        dots[index].setAttribute('aria-selected', 'true');
-        dots[index].setAttribute('tabindex', '0');
-      }
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        runSlide(current + 1);
+      }, speed * 1000);
     }
 
-    function start() {
-      if (!autoplay) return;
-      stop();
-      timer = setInterval(function () {
-        goTo(index + 1);
-      }, speed);
-    }
-
-    function stop() {
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-
-    dots.forEach(function (dot) {
-      dot.addEventListener('click', function () {
-        var i = parseInt(dot.getAttribute('data-dot'), 10);
-        if (!isNaN(i)) {
-          goTo(i);
-          start();
-        }
+    if (track) {
+      track.addEventListener('click', function () {
+        clearTimeout(timer);
+        runSlide(current + 1);
       });
-    });
+    }
 
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    start();
+    // Pehli active image ke liye progress start
+    requestAnimationFrame(function () {
+      runSlide(0);
+    });
   })();
 </script>
+{%- endif -%}
 
 {% schema %}
 {
-  "name": "MY SHAKE Hero",
-  "tag": "section",
-  "class": "section-myshake-hero",
-  "max_blocks": 6,
+  "name": "MyShake Hero",
   "settings": [
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
-      "type": "range",
-      "id": "min_height",
-      "min": 60,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Section height",
-      "default": 100
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "unit": "%",
-      "label": "Image overlay opacity",
-      "default": 35
-    },
-    {
-      "type": "range",
-      "id": "bar_split",
-      "min": 30,
-      "max": 55,
-      "step": 1,
-      "unit": "%",
-      "label": "Teal bar width",
-      "default": 42
-    },
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Lime accent",
-      "default": "#C6FF00"
-    },
-    {
-      "type": "color",
-      "id": "teal_color",
-      "label": "Teal",
-      "default": "#0B4F4A"
-    },
-    {
-      "type": "color",
-      "id": "text_light",
-      "label": "Light text",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "header",
-      "content": "Typography"
-    },
-    {
-      "type": "range",
-      "id": "headline_size",
-      "min": 28,
-      "max": 72,
-      "step": 2,
-      "unit": "px",
-      "label": "Headline size (desktop)",
-      "default": 52
-    },
-    {
-      "type": "range",
-      "id": "live_size",
-      "min": 28,
-      "max": 80,
-      "step": 2,
-      "unit": "px",
-      "label": "Live / to Perform size",
-      "default": 56
-    },
-    {
-      "type": "header",
-      "content": "Slider"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_dots",
-      "label": "Show slide dots",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "autoplay",
-      "label": "Autoplay slides",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "autoplay_speed",
-      "min": 3000,
-      "max": 9000,
-      "step": 500,
-      "unit": "ms",
-      "label": "Autoplay speed",
-      "default": 5500
-    }
+    { "type": "range", "id": "autoplay_speed", "label": "Autoplay speed (seconds)", "min": 2, "max": 12, "step": 1, "default": 5 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "color_teal", "label": "Teal", "default": "#105254" },
+    { "type": "color", "id": "color_green", "label": "Green", "default": "#A5ED64" },
+    { "type": "color", "id": "color_white", "label": "White / text", "default": "#FFFFFF" },
+    { "type": "header", "content": "Aspect ratios" },
+    { "type": "text", "id": "aspect_desktop", "label": "Desktop aspect ratio", "default": "1442 / 753" },
+    { "type": "text", "id": "aspect_tablet", "label": "Tablet aspect ratio", "default": "3 / 2" },
+    { "type": "text", "id": "aspect_mobile", "label": "Mobile aspect ratio", "default": "4 / 5" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" }
   ],
   "blocks": [
     {
       "type": "slide",
       "name": "Slide",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Background image"
-        },
-        {
-          "type": "header",
-          "content": "Headline"
-        },
-        {
-          "type": "text",
-          "id": "headline_top",
-          "label": "Top line",
-          "default": "Nutrition that's made"
-        },
-        {
-          "type": "text",
-          "id": "headline_bottom",
-          "label": "Bottom line",
-          "default": "not bulk up."
-        },
-        {
-          "type": "header",
-          "content": "Split bar"
-        },
-        {
-          "type": "text",
-          "id": "meta_line_1",
-          "label": "Meta line 1",
-          "default": "Performance Focused"
-        },
-        {
-          "type": "text",
-          "id": "meta_line_2",
-          "label": "Meta line 2",
-          "default": "Sports Nutrition Brand"
-        },
-        {
-          "type": "text",
-          "id": "bar_left_word",
-          "label": "Word on teal (lime text)",
-          "default": "Live"
-        },
-        {
-          "type": "text",
-          "id": "bar_right_word",
-          "label": "Word on lime (teal text)",
-          "default": "to Perform"
-        },
-        {
-          "type": "header",
-          "content": "Button"
-        },
-        {
-          "type": "text",
-          "id": "button_prefix",
-          "label": "Prefix text",
-          "default": "UP TO"
-        },
-        {
-          "type": "text",
-          "id": "button_highlight",
-          "label": "Highlighted text",
-          "default": "30% Off"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button label",
-          "default": "SHOP NOW"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Button link"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_bolt",
-          "label": "Show lightning badge",
-          "default": true
-        }
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        { "type": "header", "content": "Top text" },
+        { "type": "text", "id": "text_top_line1", "label": "Top line 1", "default": "Nutrition" },
+        { "type": "text", "id": "text_top_line2", "label": "Top line 2", "default": "that's made" },
+        { "type": "header", "content": "Colored bar" },
+        { "type": "text", "id": "eyebrow_label", "label": "Eyebrow label", "default": "Performance Focused" },
+        { "type": "text", "id": "eyebrow_sub", "label": "Eyebrow sub label", "default": "Sports Nutrition Brand" },
+        { "type": "text", "id": "heading_live", "label": "Bar heading (green text)", "default": "Live" },
+        { "type": "text", "id": "heading_perform", "label": "Bar heading (green block)", "default": "to Perform" },
+        { "type": "header", "content": "Bottom text" },
+        { "type": "text", "id": "text_bottom", "label": "Bottom line", "default": "not bulk up." }
       ]
     }
   ],
   "presets": [
     {
-      "name": "MY SHAKE Hero",
-      "blocks": [
-        {
-          "type": "slide"
-        },
-        {
-          "type": "slide",
-          "settings": {
-            "headline_top": "Fuel that helps you",
-            "headline_bottom": "go further.",
-            "bar_left_word": "Train",
-            "bar_right_word": "to Win",
-            "button_highlight": "25% Off"
-          }
-        }
-      ]
+      "name": "MyShake Hero",
+      "blocks": [{ "type": "slide" }]
     }
   ]
 }
