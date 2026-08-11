@@ -1,0 +1,556 @@
+<div
+  class="nutri-hero"
+  id="nutri-hero-{{ section.id }}"
+>
+  <div class="nutri-hero__media">
+    {%- if section.settings.bg_image != blank -%}
+      <img
+        src="{{ section.settings.bg_image | image_url: width: 2000 }}"
+        srcset="
+          {{ section.settings.bg_image | image_url: width: 750 }} 750w,
+          {{ section.settings.bg_image | image_url: width: 1100 }} 1100w,
+          {{ section.settings.bg_image | image_url: width: 1600 }} 1600w,
+          {{ section.settings.bg_image | image_url: width: 2000 }} 2000w
+        "
+        sizes="100vw"
+        alt="{{ section.settings.heading_line1 | escape }}"
+        loading="eager"
+        width="{{ section.settings.bg_image.width }}"
+        height="{{ section.settings.bg_image.height }}"
+      >
+    {%- else -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+  <div class="nutri-hero__content">
+    <div class="nutri-hero__top">
+      {%- if section.settings.subtitle != blank -%}
+        <p class="nutri-hero__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+
+      <h1 class="nutri-hero__heading">
+        {%- if section.settings.heading_line1 != blank -%}
+          <span class="nutri-hero__line nutri-hero__line--white">{{ section.settings.heading_line1 }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading_line2 != blank -%}
+          <span class="nutri-hero__line-wrap">
+            <span class="nutri-hero__line nutri-hero__line--green">{{ section.settings.heading_line2 }}</span>
+            {%- if section.settings.show_play -%}
+              <button type="button" class="nutri-hero__play" aria-label="Play video">
+                {%- if section.settings.play_icon != blank -%}
+                  <img
+                    src="{{ section.settings.play_icon | image_url: width: 100 }}"
+                    alt=""
+                    loading="lazy"
+                    width="{{ section.settings.play_icon.width }}"
+                    height="{{ section.settings.play_icon.height }}"
+                  >
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="2.5" y="2.5" width="19" height="19" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M10 8.5v7l6-3.5-6-3.5z" fill="currentColor"/>
+                  </svg>
+                {%- endif -%}
+              </button>
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+
+        {%- if section.settings.heading_line3 != blank -%}
+          <span class="nutri-hero__line nutri-hero__line--white">{{ section.settings.heading_line3 }}</span>
+        {%- endif -%}
+      </h1>
+
+      {%- if section.settings.badge_text != blank -%}
+        <div class="nutri-hero__badge">{{ section.settings.badge_text }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="nutri-hero__bottom">
+      {%- if section.settings.tagline != blank -%}
+        <p class="nutri-hero__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.price != blank or section.settings.buy_now_text != blank -%}
+        <a
+          class="nutri-hero__cta"
+          href="{{ section.settings.buy_now_link | default: '#' }}"
+          {% if section.settings.buy_now_link == blank %}aria-disabled="true"{% endif %}
+        >
+          {%- if section.settings.price != blank -%}
+            <span class="nutri-hero__price">{{ section.settings.price }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.buy_now_text != blank -%}
+            <span class="nutri-hero__buy">
+              <span class="nutri-hero__buy-text">{{ section.settings.buy_now_text }}</span>
+              <span class="nutri-hero__buy-icon" aria-hidden="true">
+                {%- if section.settings.buy_icon != blank -%}
+                  <img
+                    src="{{ section.settings.buy_icon | image_url: width: 60 }}"
+                    alt=""
+                    loading="lazy"
+                    width="{{ section.settings.buy_icon.width }}"
+                    height="{{ section.settings.buy_icon.height }}"
+                  >
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+                    <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
+                  </svg>
+                {%- endif -%}
+              </span>
+            </span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .nutri-hero,
+  #shopify-section-{{ section.id }} .nutri-hero * {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero {
+    --nh-white: {{ section.settings.color_white }};
+    --nh-green: {{ section.settings.color_green }};
+    --nh-teal: {{ section.settings.color_teal }};
+
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #0a0a0a;
+    margin-top: {{ section.settings.spacing_top }}px;
+    margin-bottom: {{ section.settings.spacing_bottom }}px;
+    min-height: 560px;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__media img,
+  #shopify-section-{{ section.id }} .nutri-hero__media .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__content {
+    position: relative;
+    z-index: 1;
+    min-height: inherit;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3rem 6% 2rem;
+  }
+
+  /* ----- Top-left block ----- */
+  #shopify-section-{{ section.id }} .nutri-hero__top {
+    max-width: 42rem;
+    width: 100%;
+  }
+
+  /* ===== Typography: yahan font-size / line-height / letter-spacing edit karo ===== */
+  #shopify-section-{{ section.id }} .nutri-hero__subtitle {
+    margin: 0 0 0.35em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: clamp(15px, 3.2vw, 28px);
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--nh-white);
+    max-width: 34em;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__heading {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: clamp(36px, 9vw, 100px);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__line {
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__line--white {
+    color: var(--nh-white);
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__line--green {
+    color: var(--nh-green);
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__line-wrap {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2em 0.35em;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__play {
+    flex: 0 0 auto;
+    width: 0.32em;
+    height: 0.32em;
+    min-width: 18px;
+    min-height: 18px;
+    max-width: 36px;
+    max-height: 36px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: var(--nh-white);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__play img,
+  #shopify-section-{{ section.id }} .nutri-hero__play svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__badge {
+    display: inline-block;
+    width: max-content;
+    max-width: 100%;
+    margin-top: 1.1em;
+    padding: 0.85em 1.5em;
+    border-radius: 6px;
+    background: var(--nh-teal);
+    color: var(--nh-green);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: clamp(12px, 1.5vw, 15px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  /* ----- Bottom-right block ----- */
+  #shopify-section-{{ section.id }} .nutri-hero__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__tagline {
+    margin: 0 0 0.75em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: clamp(13px, 1.8vw, 20px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: var(--nh-white);
+  }
+
+  /* One pill: price | BUY NOW + bolt */
+  #shopify-section-{{ section.id }} .nutri-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.35em 0.4em 0.35em 1.15em;
+    border-radius: 999px;
+    background: var(--nh-teal);
+    color: var(--nh-white);
+    text-decoration: none;
+    max-width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__price {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: clamp(13px, 1.6vw, 16px);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--nh-green);
+    white-space: nowrap;
+    padding-right: 0.85em;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__buy {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    height: 100%;
+    padding: 0.55em 2.2em 0.55em 0.9em;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    font-family: 'Space Grotesk', 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: clamp(12px, 1.5vw, 15px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nh-white);
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__buy-icon {
+    position: absolute;
+    right: -0.15em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.85em;
+    height: 1.85em;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 50%;
+    background: var(--nh-green);
+    color: var(--nh-teal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__buy-icon img {
+    width: 55%;
+    height: 55%;
+    object-fit: contain;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .nutri-hero__buy-icon svg {
+    display: block;
+  }
+
+  /* Tablet+ */
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .nutri-hero {
+      min-height: 650px;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__content {
+      padding: 4rem 7% 2.5rem;
+    }
+  }
+
+  /* Desktop — image layout: top-left + bottom-right */
+  @media screen and (min-width: 990px) {
+    #shopify-section-{{ section.id }} .nutri-hero {
+      aspect-ratio: 1440 / 698;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__content {
+      min-height: 100%;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 8% 10% 7%;
+      gap: 2rem;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__top {
+      align-self: flex-start;
+      max-width: 52%;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__bottom {
+      align-items: flex-end;
+      text-align: right;
+      width: auto;
+      max-width: 22rem;
+      align-self: flex-end;
+      margin-bottom: 0.5rem;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__tagline {
+      text-align: right;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__badge {
+      min-width: 14em;
+    }
+  }
+
+  /* Mobile tweaks */
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nutri-hero {
+      min-height: 520px;
+      aspect-ratio: 4 / 5;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__content {
+      padding: 2rem 5% 1.75rem;
+      gap: 1.5rem;
+    }
+
+    #shopify-section-{{ section.id }} .nutri-hero__badge {
+      white-space: normal;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Nutrition Hero",
+  "tag": "section",
+  "class": "section-nutri-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "We engineer nutrition to fuel your performance and help build a"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Heading line 1",
+      "default": "body that"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Heading line 2 (green)",
+      "default": "performs"
+    },
+    {
+      "type": "text",
+      "id": "heading_line3",
+      "label": "Heading line 3",
+      "default": "the best."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_play",
+      "label": "Show play icon",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "play_icon",
+      "label": "Play icon (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Not just look good!"
+    },
+    {
+      "type": "header",
+      "content": "Bottom CTA"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "The nutrition build for Performance."
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "₹799"
+    },
+    {
+      "type": "text",
+      "id": "buy_now_text",
+      "label": "Buy now text",
+      "default": "BUY NOW"
+    },
+    {
+      "type": "url",
+      "id": "buy_now_link",
+      "label": "Buy now link"
+    },
+    {
+      "type": "image_picker",
+      "id": "buy_icon",
+      "label": "Buy icon (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_white",
+      "label": "White / text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "color_green",
+      "label": "Lime green",
+      "default": "#A5ED64"
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Teal",
+      "default": "#105254"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutrition Hero"
+    }
+  ]
+}
+{% endschema %}
