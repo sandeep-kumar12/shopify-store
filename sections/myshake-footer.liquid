@@ -253,12 +253,15 @@
     text-decoration: underline;
   }
 
-  /* ===== MID — custom left/right padding ===== */
+  /* ===== MID — <1024 page-width; ≥1024 custom pad ===== */
   #shopify-section-{{ section.id }} .myshake-footer__mid {
     width: 100%;
+    max-width: var(--page-width, 1200px);
+    margin-left: auto;
+    margin-right: auto;
     margin-top: clamp(36px, 5vw, 56px);
-    padding-left: var(--mf-mid-pad-l);
-    padding-right: var(--mf-mid-pad-r);
+    padding-left: 20px;
+    padding-right: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -311,13 +314,16 @@
     line-height: 1.58;
   }
 
-  /* ===== BOTTOM — custom left/right padding ===== */
+  /* ===== BOTTOM — <1024 page-width; ≥1024 custom pad ===== */
   #shopify-section-{{ section.id }} .myshake-footer__bottom {
     width: 100%;
+    max-width: var(--page-width, 1200px);
+    margin-left: auto;
+    margin-right: auto;
     margin-top: clamp(28px, 4vw, 40px);
     padding-top: 24px;
-    padding-left: var(--mf-bot-pad-l);
-    padding-right: var(--mf-bot-pad-r);
+    padding-left: 20px;
+    padding-right: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
@@ -354,6 +360,12 @@
       grid-template-columns: minmax(180px, 1.1fr) repeat(3, minmax(0, 1fr));
       gap: clamp(32px, 5vw, 64px);
       align-items: start;
+      padding-left: max(20px, 3vw);
+      padding-right: max(20px, 3vw);
+    }
+
+    #shopify-section-{{ section.id }} .myshake-footer__mid,
+    #shopify-section-{{ section.id }} .myshake-footer__bottom {
       padding-left: max(20px, 3vw);
       padding-right: max(20px, 3vw);
     }
@@ -403,18 +415,22 @@
     }
   }
 
-  /* Mobile: keep usable custom padding floors */
-  @media screen and (max-width: 749px) {
+  /* ≥1024: mid + bottom use custom left/right padding */
+  @media screen and (min-width: 1024px) {
     #shopify-section-{{ section.id }} .myshake-footer__mid {
-      padding-left: max(20px, var(--mf-mid-pad-l));
-      padding-right: max(20px, var(--mf-mid-pad-r));
+      max-width: none;
+      padding-left: var(--mf-mid-pad-l);
+      padding-right: var(--mf-mid-pad-r);
     }
 
     #shopify-section-{{ section.id }} .myshake-footer__bottom {
-      padding-left: max(20px, var(--mf-bot-pad-l));
-      padding-right: max(20px, var(--mf-bot-pad-r));
+      max-width: none;
+      padding-left: var(--mf-bot-pad-l);
+      padding-right: var(--mf-bot-pad-r);
     }
+  }
 
+  @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} .myshake-footer__top {
       gap: 28px;
     }
