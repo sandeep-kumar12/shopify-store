@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "myshake_hero": {
+      "type": "myshake-hero",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "text_top_line1": "Nutrition",
+            "text_top_line2": "that's made",
+            "eyebrow_label": "Performance Focused",
+            "eyebrow_sub": "Sports Nutrition Brand",
+            "heading_live": "Live",
+            "heading_perform": "to Perform",
+            "text_bottom": "not bulk up.",
+            "show_cta": true,
+            "cta_prefix": "UP TO",
+            "cta_highlight": "30% Off",
+            "cta_label": "SHOP NOW",
+            "show_bolt": true
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "text_top_line1": "Fuel that",
+            "text_top_line2": "helps you",
+            "eyebrow_label": "Performance Focused",
+            "eyebrow_sub": "Sports Nutrition Brand",
+            "heading_live": "Train",
+            "heading_perform": "to Win",
+            "text_bottom": "go further.",
+            "show_cta": true,
+            "cta_prefix": "UP TO",
+            "cta_highlight": "25% Off",
+            "cta_label": "SHOP NOW",
+            "show_bolt": true
+          }
+        }
+      },
+      "block_order": ["slide_1", "slide_2"],
+      "settings": {
+        "autoplay_speed": 5,
+        "color_teal": "#105254",
+        "color_green": "#A5ED64",
+        "color_white": "#FFFFFF",
+        "bar_split": 55,
+        "aspect_desktop": "1442 / 753",
+        "aspect_tablet": "3 / 2",
+        "aspect_mobile": "4 / 5"
+      }
+    }
+  },
+  "order": ["myshake_hero"]
+}

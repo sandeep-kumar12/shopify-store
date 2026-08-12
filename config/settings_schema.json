@@ -1,0 +1,14 @@
+{
+  "name": "MY SHAKE",
+  "version": "1.0.0",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Theme"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use the MY SHAKE Hero section on the homepage. Upload a running athletes background image in each slide for the full design."
+    }
+  ]
+}

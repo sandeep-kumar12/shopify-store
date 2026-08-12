@@ -1,0 +1,631 @@
+{%- liquid
+  assign p = section.settings.product
+  assign highlights_raw = ''
+  assign eyebrow_raw = ''
+
+  if p != blank
+    assign highlights_raw = p.metafields.custom.highlights.value
+    assign eyebrow_raw = p.metafields.custom.pre_workout_detailss.value
+  endif
+
+  if highlights_raw == blank
+    assign highlights_raw = section.settings.highlights_fallback
+  endif
+
+  if eyebrow_raw == blank
+    assign eyebrow_raw = section.settings.eyebrow_fallback
+  endif
+
+  assign highlights = highlights_raw | split: ','
+  assign eyebrow_parts = eyebrow_raw | split: ','
+
+  assign heading_text = section.settings.heading
+  if heading_text == blank and p != blank
+    assign heading_text = p.title
+  endif
+  assign title_words = heading_text | split: ' '
+-%}
+
+<div class="pwp-section" id="pwp-{{ section.id }}">
+  <div class="pwp-wrap">
+    <div class="pwp-left">
+      {%- if eyebrow_parts.size > 0 -%}
+        <p class="pwp-eyebrow">
+          {%- for part in eyebrow_parts -%}
+            {%- assign part_text = part | strip -%}
+            {%- if part_text != blank -%}
+              {{ part_text }}{%- unless forloop.last %} · {% endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </p>
+      {%- endif -%}
+
+      {%- if heading_text != blank -%}
+        <h2 class="pwp-heading">
+          {%- for word in title_words -%}
+            {%- if forloop.last -%}
+              <strong>{{ word }}</strong>
+            {%- else -%}
+              {{ word }}{{ ' ' }}
+            {%- endif -%}
+          {%- endfor -%}
+        </h2>
+      {%- endif -%}
+
+      {%- if highlights.size > 0 -%}
+        <div class="pwp-pills">
+          {%- for item in highlights -%}
+            {%- assign pill_text = item | strip -%}
+            {%- if pill_text != blank -%}
+              <span class="pwp-pill">{{ pill_text }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <div class="pwp-ingredients">
+        {%- assign has_ingredient_blocks = false -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'ingredient' -%}
+            {%- assign has_ingredient_blocks = true -%}
+            <div class="pwp-ingredient-row{% if block.settings.show_bar == false %} pwp-ingredient-row--flat{% endif %}" {{ block.shopify_attributes }}>
+              <div class="pwp-ingredient-top">
+                <span class="pwp-ingredient-label">{{ block.settings.label }}</span>
+                <span class="pwp-ingredient-value">{{ block.settings.value }}</span>
+              </div>
+              {%- if block.settings.show_bar -%}
+                <div class="pwp-bar-track">
+                  <div class="pwp-bar-fill" style="width: {{ block.settings.bar_percent }}%;"></div>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- unless has_ingredient_blocks -%}
+          <div class="pwp-ingredient-row">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">L-Citrulline DL-Malate (pump + endurance)</span>
+              <span class="pwp-ingredient-value">4.75g</span>
+            </div>
+            <div class="pwp-bar-track"><div class="pwp-bar-fill" style="width: 100%;"></div></div>
+          </div>
+          <div class="pwp-ingredient-row">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">Beta-Alanine CarnoSyn® (endurance)</span>
+              <span class="pwp-ingredient-value">2g</span>
+            </div>
+            <div class="pwp-bar-track"><div class="pwp-bar-fill" style="width: 65%;"></div></div>
+          </div>
+          <div class="pwp-ingredient-row">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">L-Arginine blend (circulation)</span>
+              <span class="pwp-ingredient-value">2g</span>
+            </div>
+            <div class="pwp-bar-track"><div class="pwp-bar-fill" style="width: 80%;"></div></div>
+          </div>
+          <div class="pwp-ingredient-row">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">SR Caffeine (sustained, no crash)</span>
+              <span class="pwp-ingredient-value">150mg</span>
+            </div>
+            <div class="pwp-bar-track"><div class="pwp-bar-fill" style="width: 60%;"></div></div>
+          </div>
+          <div class="pwp-ingredient-row">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">KSM-66® Ashwagandha (stress + adapt.)</span>
+              <span class="pwp-ingredient-value">250mg</span>
+            </div>
+            <div class="pwp-bar-track"><div class="pwp-bar-fill" style="width: 30%;"></div></div>
+          </div>
+          <div class="pwp-ingredient-row pwp-ingredient-row--flat">
+            <div class="pwp-ingredient-top">
+              <span class="pwp-ingredient-label">Filler / hidden blends</span>
+              <span class="pwp-ingredient-value">zero</span>
+            </div>
+          </div>
+        {%- endunless -%}
+      </div>
+    </div>
+
+    <div class="pwp-right">
+      {%- if p != blank -%}
+        <a href="{{ p.url }}" class="pwp-buy-bar">
+          <span class="pwp-price">
+            {{ p.price | money_without_trailing_zeros | replace: 'Rs.', '₹' | replace: 'Rs', '₹' | strip_html }}
+          </span>
+          <span class="pwp-buy-divider"></span>
+          <span class="pwp-buy-text">{{ section.settings.buy_label }}</span>
+          <span class="pwp-buy-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
+            </svg>
+          </span>
+        </a>
+
+        <div class="pwp-jar">
+          {%- if p.featured_image != blank -%}
+            {{
+              p.featured_image
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                alt: p.featured_image.alt | default: p.title,
+                widths: '250, 400, 600, 800',
+                sizes: '(max-width: 749px) 70vw, 440px',
+                class: 'pwp-jar-img'
+            }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'pwp-placeholder' }}
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class="pwp-buy-bar pwp-buy-bar--disabled" aria-disabled="true">
+          <span class="pwp-price">₹799</span>
+          <span class="pwp-buy-divider"></span>
+          <span class="pwp-buy-text">{{ section.settings.buy_label }}</span>
+          <span class="pwp-buy-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/>
+            </svg>
+          </span>
+        </div>
+        <div class="pwp-jar">
+          {{ 'product-1' | placeholder_svg_tag: 'pwp-placeholder' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .pwp-section,
+  #shopify-section-{{ section.id }} .pwp-section * {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-section {
+    --pwp-bg: {{ section.settings.color_bg }};
+    --pwp-teal: {{ section.settings.color_teal }};
+    --pwp-heading-accent: {{ section.settings.color_heading_accent }};
+    --pwp-green: {{ section.settings.color_green }};
+    --pwp-text: {{ section.settings.color_text }};
+
+    background: var(--pwp-bg);
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-wrap {
+    width: 100%;
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: center;
+    padding-left: {{ section.settings.padding_x }}px;
+    padding-right: {{ section.settings.padding_x }}px;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-left {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-eyebrow {
+    margin: 0 0 0.4em;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(11px, 1.1vw, 14px);
+    line-height: 1.45;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1F2937;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-heading {
+    margin: 0 0 0.45em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: clamp(28px, 3.6vw, 45px);
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: var(--pwp-teal);
+  }
+
+  #shopify-section-{{ section.id }} .pwp-heading strong {
+    font-weight: 600;
+    color: var(--pwp-heading-accent);
+  }
+
+  #shopify-section-{{ section.id }} .pwp-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-bottom: clamp(14px, 2vw, 20px);
+  }
+
+  #shopify-section-{{ section.id }} .pwp-pill {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--pwp-green);
+    border-radius: 999px;
+    padding: 0.4em 0.95em;
+    background: rgba(141, 198, 63, 0.06);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(12px, 1.05vw, 14px);
+    line-height: 1.35;
+    letter-spacing: 0;
+    color: #115E59;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.4vw, 14px);
+  }
+
+  #shopify-section-{{ section.id }} .pwp-ingredient-row {
+    padding-bottom: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-ingredient-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-ingredient-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(12px, 1.05vw, 14px);
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--pwp-text);
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-ingredient-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(12px, 1.05vw, 14px);
+    font-weight: 700;
+    color: var(--pwp-teal);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-bar-track {
+    width: 100%;
+    height: 6px;
+    background: #e4e4e4;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-bar-fill {
+    height: 100%;
+    background: var(--pwp-green);
+    border-radius: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(12px, 1.5vw, 18px);
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    background: var(--pwp-teal);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.35em 0.35em 0.35em 1em;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-bar--disabled {
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(12px, 1.1vw, 15px);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-divider {
+    width: 1px;
+    height: 0.9em;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(10px, 0.95vw, 13px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-icon {
+    flex-shrink: 0;
+    width: 1.7em;
+    height: 1.7em;
+    min-width: 22px;
+    min-height: 22px;
+    border-radius: 50%;
+    background: var(--pwp-green);
+    color: var(--pwp-teal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-buy-icon svg {
+    width: 55%;
+    height: 55%;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-jar {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .pwp-jar img,
+  #shopify-section-{{ section.id }} .pwp-jar svg,
+  #shopify-section-{{ section.id }} .pwp-jar .pwp-jar-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.15));
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 989px) {
+    #shopify-section-{{ section.id }} .pwp-wrap {
+      padding-left: max(20px, {{ section.settings.padding_x }}px);
+      padding-right: max(20px, {{ section.settings.padding_x }}px);
+      gap: 28px;
+    }
+  }
+
+  /* Mobile: image + buy bar on top, content below */
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .pwp-wrap {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .pwp-right {
+      order: -1;
+      align-items: center;
+    }
+
+    #shopify-section-{{ section.id }} .pwp-jar {
+      max-width: 280px;
+    }
+
+    #shopify-section-{{ section.id }} .pwp-pills {
+      gap: 8px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Pre-workout Performance",
+  "tag": "section",
+  "class": "section-pwp",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Uses product image, price, and metafields: custom.highlights, custom.pre_workout_detailss"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (optional)",
+      "info": "Leave blank to use product title. Last word is accent-colored.",
+      "default": "Pre-workout Performance."
+    },
+    {
+      "type": "text",
+      "id": "buy_label",
+      "label": "Buy button text",
+      "default": "BUY NOW"
+    },
+    {
+      "type": "textarea",
+      "id": "eyebrow_fallback",
+      "label": "Eyebrow fallback (comma separated)",
+      "default": "PRE-WORKOUT, BLUEBERRY MINT, 340G, 20 SERVINGS"
+    },
+    {
+      "type": "textarea",
+      "id": "highlights_fallback",
+      "label": "Pills fallback (comma separated)",
+      "default": "KSM-66® Ashwagandha 250mg, CarnoSyn® Beta-Alanine 2g, Veg Vitamin D3 600IU, SR Caffeine 150mg – No Crash, Cocooin® Coconut Water 500mg"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Left / right padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Background",
+      "default": "#F5F5F4"
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Teal / heading",
+      "default": "#0D3B34"
+    },
+    {
+      "type": "color",
+      "id": "color_heading_accent",
+      "label": "Heading last-word accent",
+      "default": "#007965"
+    },
+    {
+      "type": "color",
+      "id": "color_green",
+      "label": "Lime green",
+      "default": "#8DC63F"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Body text",
+      "default": "#111827"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "L-Citrulline DL-Malate (pump + endurance)"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "4.75g"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_bar",
+          "label": "Show progress bar",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "bar_percent",
+          "label": "Bar fill",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 100
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pre-workout Performance",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "L-Citrulline DL-Malate (pump + endurance)",
+            "value": "4.75g",
+            "show_bar": true,
+            "bar_percent": 100
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "Beta-Alanine CarnoSyn® (endurance)",
+            "value": "2g",
+            "show_bar": true,
+            "bar_percent": 65
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "L-Arginine blend (circulation)",
+            "value": "2g",
+            "show_bar": true,
+            "bar_percent": 80
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "SR Caffeine (sustained, no crash)",
+            "value": "150mg",
+            "show_bar": true,
+            "bar_percent": 60
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "KSM-66® Ashwagandha (stress + adapt.)",
+            "value": "250mg",
+            "show_bar": true,
+            "bar_percent": 30
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "label": "Filler / hidden blends",
+            "value": "zero",
+            "show_bar": false,
+            "bar_percent": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
